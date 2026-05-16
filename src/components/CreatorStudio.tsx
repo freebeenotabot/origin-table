@@ -20,6 +20,30 @@ const VOICE_PROMPTS = [
 
 const WAVE_HEIGHTS = [10, 20, 14, 22, 12, 18, 8]
 
+function ProgressBar({
+  pct,
+  back,
+  accentColor,
+}: {
+  pct: number
+  back: () => void
+  accentColor: string
+}) {
+  return (
+    <div className="flex items-center gap-3 mb-8">
+      <button onClick={back} className="text-[#78716C]">
+        <ArrowLeft className="w-4 h-4" />
+      </button>
+      <div className="flex-1 bg-[#E7E0D8] rounded-full h-1">
+        <div
+          className="h-1 rounded-full transition-all duration-500"
+          style={{ width: `${pct}%`, backgroundColor: accentColor }}
+        />
+      </div>
+    </div>
+  )
+}
+
 type Phase = 'setup' | 'input' | 'loading-questions' | 'qa' | 'synthesizing' | 'preview' | 'published'
 type InputMode = null | 'camera' | 'voice' | 'text'
 type VoiceStep = 'idle' | 'recording' | 'processing' | 'done' | 'error'
@@ -273,23 +297,6 @@ export function CreatorStudio({ properties }: Props) {
     />
   )
 
-  // Progress bar helper
-  function ProgressBar({ pct, back }: { pct: number; back: () => void }) {
-    return (
-      <div className="flex items-center gap-3 mb-8">
-        <button onClick={back} className="text-[#78716C]">
-          <ArrowLeft className="w-4 h-4" />
-        </button>
-        <div className="flex-1 bg-[#E7E0D8] rounded-full h-1">
-          <div
-            className="h-1 rounded-full transition-all duration-500"
-            style={{ width: `${pct}%`, backgroundColor: accentColor }}
-          />
-        </div>
-      </div>
-    )
-  }
-
   // ── SETUP ────────────────────────────────────────────────────────────────────
 
   if (phase === 'setup') {
@@ -388,7 +395,7 @@ export function CreatorStudio({ properties }: Props) {
     return (
       <div className="px-4 pt-8 max-w-md mx-auto pb-16">
         {cameraInput}
-        <ProgressBar pct={20} back={() => setPhase('setup')} />
+        <ProgressBar pct={20} back={() => setPhase('setup')} accentColor={accentColor} />
 
         <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
           {creationTitle}
@@ -460,7 +467,7 @@ export function CreatorStudio({ properties }: Props) {
     return (
       <div className="px-4 pt-8 max-w-md mx-auto pb-16">
         {cameraInput}
-        <ProgressBar pct={40} back={() => { setInputMode(null); setImageDataUrl(null) }} />
+        <ProgressBar pct={40} back={() => { setInputMode(null); setImageDataUrl(null) }} accentColor={accentColor} />
 
         {imageDataUrl ? (
           <>
@@ -511,7 +518,7 @@ export function CreatorStudio({ properties }: Props) {
       return (
         <div className="px-4 pt-8 max-w-md mx-auto pb-16">
           {cameraInput}
-          <ProgressBar pct={40} back={() => { setInputMode(null); setVoiceStep('idle') }} />
+          <ProgressBar pct={40} back={() => { setInputMode(null); setVoiceStep('idle') }} accentColor={accentColor} />
 
           <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
             {creationTitle}
@@ -538,7 +545,7 @@ export function CreatorStudio({ properties }: Props) {
       return (
         <div className="px-4 pt-8 max-w-md mx-auto pb-16">
           {cameraInput}
-          <ProgressBar pct={40} back={() => { stopRecording(); setVoiceStep('idle') }} />
+          <ProgressBar pct={40} back={() => { stopRecording(); setVoiceStep('idle') }} accentColor={accentColor} />
 
           <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
             {creationTitle}
@@ -580,7 +587,7 @@ export function CreatorStudio({ properties }: Props) {
       return (
         <div className="px-4 pt-8 max-w-md mx-auto pb-16">
           {cameraInput}
-          <ProgressBar pct={40} back={() => {}} />
+          <ProgressBar pct={40} back={() => {}} accentColor={accentColor} />
 
           <div className="flex flex-col items-center justify-center pt-24 gap-4">
             <Loader2 size={32} className="animate-spin text-[#78716C]" />
@@ -595,7 +602,7 @@ export function CreatorStudio({ properties }: Props) {
       return (
         <div className="px-4 pt-8 max-w-md mx-auto pb-28">
           {cameraInput}
-          <ProgressBar pct={40} back={() => { setVoiceStep('idle'); setVoiceTranscript('') }} />
+          <ProgressBar pct={40} back={() => { setVoiceStep('idle'); setVoiceTranscript('') }} accentColor={accentColor} />
 
           <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
             {creationTitle}
@@ -651,7 +658,7 @@ export function CreatorStudio({ properties }: Props) {
           )}
 
           {/* Sticky bottom bar — always visible */}
-          <div className="fixed bottom-0 left-0 right-0 px-4 py-3 bg-[#FAF7F2] border-t border-[#E7E0D8]">
+          <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl px-4 py-3 bg-[#FAF7F2] border-t border-[#E7E0D8]">
             <button
               onClick={handleInputNext}
               className="w-full py-4 text-white font-semibold rounded-2xl text-sm transition-opacity active:opacity-90"
@@ -669,7 +676,7 @@ export function CreatorStudio({ properties }: Props) {
       return (
         <div className="px-4 pt-8 max-w-md mx-auto pb-16">
           {cameraInput}
-          <ProgressBar pct={40} back={() => { setInputMode(null); setVoiceStep('idle') }} />
+          <ProgressBar pct={40} back={() => { setInputMode(null); setVoiceStep('idle') }} accentColor={accentColor} />
 
           <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
             {creationTitle}
@@ -710,7 +717,7 @@ export function CreatorStudio({ properties }: Props) {
     return (
       <div className="px-4 pt-8 max-w-md mx-auto pb-16">
         {cameraInput}
-        <ProgressBar pct={40} back={() => setInputMode(null)} />
+        <ProgressBar pct={40} back={() => setInputMode(null)} accentColor={accentColor} />
 
         <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
           {creationTitle}
@@ -776,7 +783,7 @@ export function CreatorStudio({ properties }: Props) {
     return (
       <div className="px-4 pt-8 max-w-md mx-auto pb-16">
         {cameraInput}
-        <ProgressBar pct={40 + ((qaIndex + 1) / questions.length) * 35} back={handleQaBack} />
+        <ProgressBar pct={40 + ((qaIndex + 1) / questions.length) * 35} back={handleQaBack} accentColor={accentColor} />
 
         <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-4">
           Quick question {qaIndex + 1} of {questions.length}
