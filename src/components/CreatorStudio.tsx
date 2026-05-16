@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, ChangeEvent } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Camera, Mic, PenLine, Loader2, X, CheckCircle2, Check } from 'lucide-react'
 import type { Property, StoryCard, PropertyId } from '@/lib/types'
+import { saveLocalStory } from '@/lib/clientStore'
 import TagChip from '@/components/TagChip'
 import PronounceButton from '@/components/PronounceButton'
 
@@ -236,6 +237,7 @@ export function CreatorStudio({ properties }: Props) {
       body: JSON.stringify({ card: finalCard }),
     })
     const data = await res.json()
+    saveLocalStory(finalCard)
     setPublishedId(data.id)
     setPhase('published')
   }

@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { PenLine, Plus, Trophy } from 'lucide-react'
 import type { Property, StoryCard as StoryCardType, PropertyId } from '@/lib/types'
+import { getLocalStories } from '@/lib/clientStore'
 import PropertyNav from '@/components/PropertyNav'
 import StoryCard from '@/components/StoryCard'
 import UserBadge from '@/components/UserBadge'
@@ -15,8 +16,15 @@ interface Props {
 
 export default function HomeClient({ properties, allStories }: Props) {
   const [activeId, setActiveId] = useState<PropertyId>('miramar')
+  const [localCards, setLocalCards] = useState<StoryCardType[]>([])
+
+  useEffect(() => {
+    setLocalCards(getLocalStories())
+  }, [])
+
   const active = properties.find((p) => p.id === activeId)!
-  const cards = allStories.filter((s) => s.propertyId === activeId)
+  const allCards = [...allStories, ...localCards]
+  const cards = allCards.filter((s) => s.propertyId === activeId)
 
   return (
     <div className="flex flex-col min-h-screen">
