@@ -84,6 +84,7 @@ export function CreatorStudio({ properties }: Props) {
   const [editSubtitle, setEditSubtitle] = useState('')
   const [editHeadline, setEditHeadline] = useState('')
   const [publishedId, setPublishedId] = useState<string | null>(null)
+  const [synthFailed, setSynthFailed] = useState(false)
 
   const cameraInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -219,6 +220,7 @@ export function CreatorStudio({ properties }: Props) {
   }
 
   async function doSynthesize(bd: string, allAnswers: string[]) {
+    setSynthFailed(false)
     const transcript = [
       `[Creator: ${role}]`,
       `Creation: ${creationTitle}`,
@@ -233,18 +235,24 @@ export function CreatorStudio({ properties }: Props) {
       .filter(Boolean)
       .join('\n')
 
-    const res = await fetch('/api/create/synthesize', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ role, propertyId, creationTitle, transcript, imageDataUrl }),
-    })
-    const data = await res.json()
-    const card = data.card as StoryCard
-    setGeneratedCard(card)
-    setEditTitle(card.title)
-    setEditSubtitle(card.subtitle)
-    setEditHeadline(card.layers.headline)
-    setPhase('preview')
+    try {
+      const res = await fetch('/api/create/synthesize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, propertyId, creationTitle, transcript, imageDataUrl }),
+      })
+      if (!res.ok) throw new Error('Synthesis failed')
+      const data = await res.json()
+      const card = data.card as StoryCard
+      if (!card?.title) throw new Error('Invalid card response')
+      setGeneratedCard(card)
+      setEditTitle(card.title)
+      setEditSubtitle(card.subtitle)
+      setEditHeadline(card.layers.headline)
+      setPhase('preview')
+    } catch {
+      setSynthFailed(true)
+    }
   }
 
   async function handlePublish() {
@@ -767,6 +775,31 @@ export function CreatorStudio({ properties }: Props) {
   // ── LOADING ──────────────────────────────────────────────────────────────────
 
   if (phase === 'loading-questions' || phase === 'synthesizing') {
+    if (phase === 'synthesizing' && synthFailed) {
+      return (
+        <div className="px-4 pt-8 max-w-md mx-auto pb-16">
+          <div className="text-center pt-20">
+            <p className="text-[#1C1917] font-semibold text-sm mb-2">Couldn't build the card</p>
+            <p className="text-[#78716C] text-xs mb-8">Check that your API keys are set in Vercel, then try again.</p>
+            <div className="flex flex-col gap-3 max-w-xs mx-auto">
+              <button
+                onClick={() => { setSynthFailed(false); doSynthesize(braindump, answers) }}
+                className="w-full py-4 text-white font-semibold rounded-2xl text-sm"
+                style={{ backgroundColor: accentColor }}
+              >
+                Try again
+              </button>
+              <button
+                onClick={() => { setSynthFailed(false); setPhase('input'); setInputMode(null) }}
+                className="w-full py-3 text-[#78716C] text-sm border border-[#E7E0D8] rounded-xl bg-white"
+              >
+                Start over
+              </button>
+            </div>
+          </div>
+        </div>
+      )
+    }
     return (
       <div className="px-4 pt-40 max-w-md mx-auto text-center">
         <Loader2 className="w-8 h-8 animate-spin text-[#78716C] mx-auto mb-4" />

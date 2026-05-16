@@ -47,7 +47,25 @@ export default function ProfilePage() {
     setShowSwitcher(false)
   }
 
-  if (!mounted) return null
+  if (!mounted) {
+    return (
+      <main className="min-h-screen pb-16">
+        <header className="sticky top-0 z-20 bg-white border-b border-[#E7E0D8]">
+          <div className="flex items-center justify-between px-4 py-3">
+            <Link href="/" className="flex items-center gap-1 text-[#78716C] text-sm">
+              <ArrowLeft size={16} />
+              Back
+            </Link>
+            <h1 className="font-serif text-[16px] font-bold text-[#1C1917]">Profile</h1>
+            <div className="w-10" />
+          </div>
+        </header>
+        <div className="flex items-center justify-center pt-24">
+          <div className="w-6 h-6 rounded-full border-2 border-[#E7E0D8] border-t-[#78716C] animate-spin" />
+        </div>
+      </main>
+    )
+  }
 
   if (!user) {
     return (
