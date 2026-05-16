@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, ChangeEvent } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Camera, Mic, PenLine, Loader2, X, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, Camera, Mic, PenLine, Loader2, X, CheckCircle2, Check } from 'lucide-react'
 import type { Property, StoryCard, PropertyId } from '@/lib/types'
 import TagChip from '@/components/TagChip'
 import PronounceButton from '@/components/PronounceButton'
@@ -21,6 +21,7 @@ const WAVE_HEIGHTS = [10, 20, 14, 22, 12, 18, 8]
 
 type Phase = 'setup' | 'input' | 'loading-questions' | 'qa' | 'synthesizing' | 'preview' | 'published'
 type InputMode = null | 'camera' | 'voice' | 'text'
+type VoiceStep = 'idle' | 'recording' | 'processing' | 'done' | 'error'
 
 interface Props {
   properties: Property[]
@@ -41,8 +42,7 @@ export function CreatorStudio({ properties }: Props) {
   const [braindump, setBraindump] = useState('')
 
   // ── Voice recording ──────────────────────────────────────────────────────────
-  const [recording, setRecording] = useState(false)
-  const [transcribing, setTranscribing] = useState(false)
+  const [voiceStep, setVoiceStep] = useState<VoiceStep>('idle')
   const [voicePromptIndex, setVoicePromptIndex] = useState(0)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
@@ -67,10 +67,10 @@ export function CreatorStudio({ properties }: Props) {
 
   // Cycle voice prompts while recording
   useEffect(() => {
-    if (!recording) { setVoicePromptIndex(0); return }
+    if (voiceStep !== 'recording') { setVoicePromptIndex(0); return }
     const id = setInterval(() => setVoicePromptIndex((i) => (i + 1) % VOICE_PROMPTS.length), 4000)
     return () => clearInterval(id)
-  }, [recording])
+  }, [voiceStep])
 
   // ── Camera ───────────────────────────────────────────────────────────────────
 
@@ -97,25 +97,33 @@ export function CreatorStudio({ properties }: Props) {
       mr.onstop = async () => {
         stream.getTracks().forEach((t) => t.stop())
         const blob = new Blob(chunksRef.current, { type: 'audio/webm' })
-        setTranscribing(true)
+        setVoiceStep('processing')
         try {
           const fd = new FormData()
           fd.append('file', blob, 'recording.webm')
           const res = await fetch('/api/create/transcribe', { method: 'POST', body: fd })
           const data = await res.json()
-          if (data.text) onText(data.text)
-        } catch {}
-        setTranscribing(false)
+          if (data.text) {
+            onText(data.text)
+            setVoiceStep('done')
+          } else {
+            setVoiceStep('error')
+          }
+        } catch {
+          setVoiceStep('error')
+        }
       }
       mr.start()
-      setRecording(true)
+      setVoiceStep('recording')
       mediaRecorderRef.current = mr
-    }).catch(() => {})
+    }).catch(() => {
+      setVoiceStep('error')
+    })
   }
 
   function stopRecording() {
     mediaRecorderRef.current?.stop()
-    setRecording(false)
+    // voiceStep transitions to 'processing' inside mr.onstop
   }
 
   // ── Phase transitions ────────────────────────────────────────────────────────
@@ -236,6 +244,7 @@ export function CreatorStudio({ properties }: Props) {
     setImageDataUrl(null)
     setTextInput('')
     setVoiceTranscript('')
+    setVoiceStep('idle')
     setBraindump('')
     setQuestions([])
     setQaIndex(0)
@@ -490,104 +499,152 @@ export function CreatorStudio({ properties }: Props) {
   // ── INPUT — voice ────────────────────────────────────────────────────────────
 
   if (phase === 'input' && inputMode === 'voice') {
-    return (
-      <div className="px-4 pt-8 max-w-md mx-auto pb-16">
-        {cameraInput}
-        <ProgressBar pct={40} back={() => setInputMode(null)} />
+    // ── idle: large centered mic, single CTA ──────────────────────────────────
+    if (voiceStep === 'idle') {
+      return (
+        <div className="px-4 pt-8 max-w-md mx-auto pb-16">
+          {cameraInput}
+          <ProgressBar pct={40} back={() => { setInputMode(null); setVoiceStep('idle') }} />
 
-        <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
-          {creationTitle}
-        </p>
-        <h2 className="font-serif font-bold text-[#1C1917] text-xl mb-6">Voice Memo</h2>
+          <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
+            {creationTitle}
+          </p>
+          <h2 className="font-serif font-bold text-[#1C1917] text-xl mb-10">Voice Memo</h2>
 
-        {!voiceTranscript ? (
           <div className="text-center">
-            {recording && (
-              <div className="bg-stone-50 border border-[#E7E0D8] rounded-2xl p-5 mb-8 min-h-[80px] flex items-center justify-center">
-                <p className="font-serif italic text-[#1C1917] text-[15px] leading-snug">
-                  &ldquo;{VOICE_PROMPTS[voicePromptIndex]}&rdquo;
-                </p>
-              </div>
-            )}
-            {!recording && !transcribing && (
-              <p className="text-[#78716C] text-sm mb-8">
-                Tap to start — talk naturally, we&apos;ll guide you.
-              </p>
-            )}
-            {transcribing && (
-              <div className="flex items-center justify-center gap-2 text-[#78716C] text-sm mb-8">
-                <Loader2 size={16} className="animate-spin" />
-                <span>Transcribing...</span>
-              </div>
-            )}
-
-            {/* Big record button */}
             <button
-              onClick={recording ? stopRecording : () => startRecording(setVoiceTranscript)}
-              disabled={transcribing}
-              className="w-24 h-24 rounded-full flex items-center justify-center mx-auto shadow-lg transition-transform active:scale-95 disabled:opacity-50"
-              style={{ backgroundColor: recording ? '#ef4444' : accentColor }}
+              onClick={() => startRecording(setVoiceTranscript)}
+              className="w-24 h-24 rounded-full flex items-center justify-center mx-auto shadow-lg transition-transform active:scale-95"
+              style={{ backgroundColor: accentColor }}
             >
-              {recording ? (
-                <div className="w-8 h-8 rounded bg-white" />
-              ) : (
-                <Mic size={36} className="text-white" />
-              )}
+              <Mic size={36} className="text-white" />
             </button>
-            <p className="text-[#78716C] text-xs mt-4">{recording ? 'Tap to stop' : 'Tap to record'}</p>
-
-            {recording && (
-              <div className="mt-5 flex justify-center items-end gap-1">
-                {WAVE_HEIGHTS.map((h, i) => (
-                  <div
-                    key={i}
-                    className="w-1 rounded-full bg-red-400 animate-pulse"
-                    style={{ height: `${h}px`, animationDelay: `${i * 0.12}s` }}
-                  />
-                ))}
-              </div>
-            )}
+            <p className="font-medium text-[#1C1917] text-sm mt-5">Tap to start recording</p>
+            <p className="text-[#78716C] text-xs mt-1">Talk naturally — we&apos;ll guide you with prompts</p>
           </div>
-        ) : (
-          <>
-            <div className="bg-stone-50 border border-[#E7E0D8] rounded-xl p-4 mb-3">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-2">
-                Your recording
-              </p>
-              <textarea
-                value={voiceTranscript}
-                onChange={(e) => setVoiceTranscript(e.target.value)}
-                rows={5}
-                className="w-full text-sm text-[#1C1917] bg-transparent focus:outline-none resize-none leading-relaxed"
-              />
-            </div>
+        </div>
+      )
+    }
+
+    // ── recording: cycling prompt card + red stop button + wave ───────────────
+    if (voiceStep === 'recording') {
+      return (
+        <div className="px-4 pt-8 max-w-md mx-auto pb-16">
+          {cameraInput}
+          <ProgressBar pct={40} back={() => { stopRecording(); setVoiceStep('idle') }} />
+
+          <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
+            {creationTitle}
+          </p>
+          <h2 className="font-serif font-bold text-[#1C1917] text-xl mb-6">Voice Memo</h2>
+
+          <div className="bg-stone-50 border border-[#E7E0D8] rounded-2xl p-5 mb-8 min-h-[80px] flex items-center justify-center">
+            <p className="font-serif italic text-[#1C1917] text-[15px] leading-snug text-center">
+              &ldquo;{VOICE_PROMPTS[voicePromptIndex]}&rdquo;
+            </p>
+          </div>
+
+          <div className="text-center">
             <button
-              onClick={() => setVoiceTranscript('')}
-              className="flex items-center gap-1 text-xs text-[#78716C] mb-6"
+              onClick={stopRecording}
+              className="w-24 h-24 rounded-full flex items-center justify-center mx-auto shadow-lg transition-transform active:scale-95"
+              style={{ backgroundColor: '#ef4444' }}
             >
-              <X size={12} /> Record again
+              <div className="w-8 h-8 rounded bg-white" />
             </button>
+            <p className="text-[#78716C] text-xs mt-4">Tap to stop</p>
 
-            {imageDataUrl ? (
-              <div className="relative rounded-xl overflow-hidden h-28 mb-5 shadow-sm">
-                <img src={imageDataUrl} alt="" className="w-full h-full object-cover" />
-                <button
-                  onClick={() => setImageDataUrl(null)}
-                  className="absolute top-2 right-2 bg-white/80 rounded-full p-1"
-                >
-                  <X size={12} className="text-[#78716C]" />
-                </button>
-              </div>
-            ) : (
+            <div className="mt-5 flex justify-center items-end gap-1">
+              {WAVE_HEIGHTS.map((h, i) => (
+                <div
+                  key={i}
+                  className="w-1 rounded-full bg-red-400 animate-pulse"
+                  style={{ height: `${h}px`, animationDelay: `${i * 0.12}s` }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    // ── processing: spinner only, no other UI ─────────────────────────────────
+    if (voiceStep === 'processing') {
+      return (
+        <div className="px-4 pt-8 max-w-md mx-auto pb-16">
+          {cameraInput}
+          <ProgressBar pct={40} back={() => {}} />
+
+          <div className="flex flex-col items-center justify-center pt-24 gap-4">
+            <Loader2 size={32} className="animate-spin text-[#78716C]" />
+            <p className="text-[#78716C] text-sm">Converting your voice…</p>
+          </div>
+        </div>
+      )
+    }
+
+    // ── done: success line + editable textarea + sticky Next button ───────────
+    if (voiceStep === 'done') {
+      return (
+        <div className="px-4 pt-8 max-w-md mx-auto pb-28">
+          {cameraInput}
+          <ProgressBar pct={40} back={() => { setVoiceStep('idle'); setVoiceTranscript('') }} />
+
+          <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
+            {creationTitle}
+          </p>
+          <h2 className="font-serif font-bold text-[#1C1917] text-xl mb-4">Voice Memo</h2>
+
+          {/* Success confirmation line */}
+          <div className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium mb-4">
+            <Check size={15} />
+            <span>Got it!</span>
+          </div>
+
+          {/* Compact editable transcript */}
+          <div className="bg-stone-50 border border-[#E7E0D8] rounded-xl p-4 mb-3">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-2">
+              Your recording
+            </p>
+            <textarea
+              value={voiceTranscript}
+              onChange={(e) => setVoiceTranscript(e.target.value)}
+              rows={3}
+              className="w-full text-sm text-[#1C1917] bg-transparent focus:outline-none resize-none leading-relaxed"
+            />
+          </div>
+
+          {/* Record again — very small secondary link */}
+          <button
+            onClick={() => { setVoiceTranscript(''); setVoiceStep('idle') }}
+            className="text-xs text-[#78716C] underline underline-offset-2 mb-5"
+          >
+            Record again
+          </button>
+
+          {/* Add a photo — small camera icon link, above sticky bar */}
+          {imageDataUrl ? (
+            <div className="relative rounded-xl overflow-hidden h-28 mb-5 shadow-sm">
+              <img src={imageDataUrl} alt="" className="w-full h-full object-cover" />
               <button
-                onClick={openCamera}
-                className="flex items-center gap-2 text-sm text-[#78716C] mb-5"
+                onClick={() => setImageDataUrl(null)}
+                className="absolute top-2 right-2 bg-white/80 rounded-full p-1"
               >
-                <Camera size={14} />
-                Add a photo too
+                <X size={12} className="text-[#78716C]" />
               </button>
-            )}
+            </div>
+          ) : (
+            <button
+              onClick={openCamera}
+              className="flex items-center gap-1.5 text-xs text-[#78716C] mb-5"
+            >
+              <Camera size={13} />
+              Add a photo too
+            </button>
+          )}
 
+          {/* Sticky bottom bar — always visible */}
+          <div className="fixed bottom-0 left-0 right-0 px-4 py-3 bg-[#FAF7F2] border-t border-[#E7E0D8]">
             <button
               onClick={handleInputNext}
               className="w-full py-4 text-white font-semibold rounded-2xl text-sm transition-opacity active:opacity-90"
@@ -595,10 +652,49 @@ export function CreatorStudio({ properties }: Props) {
             >
               Next →
             </button>
-          </>
-        )}
-      </div>
-    )
+          </div>
+        </div>
+      )
+    }
+
+    // ── error: message + Try again / Type instead ─────────────────────────────
+    if (voiceStep === 'error') {
+      return (
+        <div className="px-4 pt-8 max-w-md mx-auto pb-16">
+          {cameraInput}
+          <ProgressBar pct={40} back={() => { setInputMode(null); setVoiceStep('idle') }} />
+
+          <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
+            {creationTitle}
+          </p>
+          <h2 className="font-serif font-bold text-[#1C1917] text-xl mb-6">Voice Memo</h2>
+
+          <div className="text-center pt-10">
+            <p className="text-[#1C1917] text-sm font-medium mb-2">
+              Couldn&apos;t transcribe — check your microphone or try again
+            </p>
+            <div className="flex flex-col gap-3 mt-8 max-w-xs mx-auto">
+              <button
+                onClick={() => { setVoiceStep('idle') }}
+                className="w-full py-4 text-white font-semibold rounded-2xl text-sm transition-opacity active:opacity-90"
+                style={{ backgroundColor: accentColor }}
+              >
+                Try again
+              </button>
+              <button
+                onClick={() => { setInputMode('text'); setVoiceStep('idle') }}
+                className="w-full py-3 text-[#78716C] text-sm border border-[#E7E0D8] rounded-xl bg-white"
+              >
+                Type instead
+              </button>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    // fallback (should never render)
+    return null
   }
 
   // ── INPUT — text ─────────────────────────────────────────────────────────────
@@ -689,12 +785,12 @@ export function CreatorStudio({ properties }: Props) {
           className="w-full h-32 px-4 py-3 rounded-xl border border-[#E7E0D8] text-[#1C1917] text-sm bg-white placeholder-[#A8A09A] focus:outline-none focus:border-stone-400 resize-none mb-4"
         />
 
-        {transcribing ? (
+        {voiceStep === 'processing' ? (
           <div className="flex items-center gap-2 text-[#78716C] text-sm mb-4">
             <Loader2 size={14} className="animate-spin" />
             <span>Transcribing...</span>
           </div>
-        ) : recording ? (
+        ) : voiceStep === 'recording' ? (
           <button
             onClick={stopRecording}
             className="flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-red-400 text-sm text-red-600 bg-red-50 mb-4"
@@ -704,7 +800,7 @@ export function CreatorStudio({ properties }: Props) {
           </button>
         ) : (
           <button
-            onClick={() => startRecording((t) => setCurrentAnswer((a) => (a ? `${a} ${t}` : t)))}
+            onClick={() => startRecording((t) => { setCurrentAnswer((a) => (a ? `${a} ${t}` : t)); setVoiceStep('idle') })}
             className="flex items-center gap-2 text-sm text-[#78716C] mb-4"
           >
             <Mic size={14} style={{ color: accentColor }} />
