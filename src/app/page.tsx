@@ -2,11 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { PenLine } from 'lucide-react'
+import { PenLine, Trophy } from 'lucide-react'
 import { properties, getStoriesByProperty } from '@/lib/data'
 import type { PropertyId } from '@/lib/types'
 import PropertyNav from '@/components/PropertyNav'
 import StoryCard from '@/components/StoryCard'
+import UserBadge from '@/components/UserBadge'
 
 export default function Home() {
   const [activeId, setActiveId] = useState<PropertyId>('miramar')
@@ -21,14 +22,24 @@ export default function Home() {
           <h1 className="font-serif text-[18px] font-bold tracking-wide text-[#1C1917]">
             Origin Table
           </h1>
-          <Link
-            href={`/quiz/${activeId}`}
-            className="flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg transition-opacity active:opacity-70"
-            style={{ color: active.accentColor }}
-          >
-            <PenLine size={15} />
-            <span>Quiz</span>
-          </Link>
+          <div className="flex items-center gap-1">
+            <Link
+              href="/leaderboard"
+              aria-label="Leaderboard"
+              className="p-2 text-[#78716C] active:opacity-70 transition-opacity"
+            >
+              <Trophy size={16} />
+            </Link>
+            <Link
+              href={`/quiz/${activeId}`}
+              className="flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg transition-opacity active:opacity-70"
+              style={{ color: active.accentColor }}
+            >
+              <PenLine size={15} />
+              <span>Quiz</span>
+            </Link>
+            <UserBadge />
+          </div>
         </div>
         <PropertyNav
           properties={properties}

@@ -97,6 +97,48 @@ export interface GuestProfile {
   briefingTalkingPoints: string[]
 }
 
+// Employees / quiz attempts / leaderboard
+export type JobFunction =
+  | 'Regional F&B Director'
+  | 'Restaurant Manager'
+  | 'Lead Server'
+  | 'Server'
+  | 'Sommelier'
+  | 'Host'
+
+export interface Employee {
+  email: string
+  name: string
+  phone: string
+  jobFunction: JobFunction
+  location: string
+  managerEmail: string | null
+  propertyId: PropertyId
+  avatarInitials: string
+  avatarColor: string
+  startDate: string // ISO date
+}
+
+export interface QuizAttempt {
+  id: string
+  employeeEmail: string
+  propertyId: PropertyId
+  score: number
+  total: number
+  percent: number // 0–100
+  completedAt: string // ISO timestamp
+}
+
+export interface LeaderboardEntry {
+  employee: Employee
+  certifications: number   // count of properties where best percent >= CERT_THRESHOLD
+  masteryBadges: number    // count of properties where best percent === 100
+  totalPoints: number      // sum of best percent across properties (0–300)
+  attemptCount: number
+  lastAttemptAt: string | null
+  rank: number             // 1-indexed
+}
+
 // API request / response shapes
 export interface PronounceRequest {
   term: string

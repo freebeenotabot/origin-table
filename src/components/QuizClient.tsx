@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, CheckCircle2, XCircle } from 'lucide-react'
-import type { PropertyQuiz, Property } from '@/lib/types'
+import { ArrowLeft, CheckCircle2, XCircle, Award } from 'lucide-react'
+import type { Employee, PropertyQuiz, Property } from '@/lib/types'
+import { getCurrentUser, saveAttempt } from '@/lib/user'
 
 interface Props {
   quiz: PropertyQuiz
@@ -17,6 +18,12 @@ export function QuizClient({ quiz, property }: Props) {
   const [current, setCurrent] = useState(0)
   const [selected, setSelected] = useState<number | null>(null)
   const [score, setScore] = useState(0)
+  const [user, setUser] = useState<Employee | null>(null)
+  const [savedForAttempt, setSavedForAttempt] = useState(false)
+
+  useEffect(() => {
+    setUser(getCurrentUser())
+  }, [])
 
   const total = quiz.questions.length
   const question = quiz.questions[current]
@@ -24,6 +31,20 @@ export function QuizClient({ quiz, property }: Props) {
   const pct = Math.round((score / total) * 100)
   const statusLabel =
     pct < 60 ? 'Keep studying 📖' : pct < 100 ? 'Almost ready 👍' : 'Ready for service ✓'
+  const certified = pct >= 60
+
+  // Persist attempt exactly once when entering the result phase with a logged-in user.
+  useEffect(() => {
+    if (phase !== 'result' || savedForAttempt || !user) return
+    saveAttempt({
+      employeeEmail: user.email,
+      propertyId: property.id,
+      score,
+      total,
+      percent: pct,
+    })
+    setSavedForAttempt(true)
+  }, [phase, savedForAttempt, user, property.id, score, total, pct])
 
   function handleAnswer(i: number) {
     if (selected !== null) return
@@ -44,6 +65,7 @@ export function QuizClient({ quiz, property }: Props) {
     setCurrent(0)
     setSelected(null)
     setScore(0)
+    setSavedForAttempt(false)
     setPhase('intro')
   }
 
@@ -76,11 +98,39 @@ export function QuizClient({ quiz, property }: Props) {
         <p className="font-serif font-bold text-[#1C1917] text-4xl mb-2">
           {score}/{total}
         </p>
-        <p className={`text-base font-semibold mb-10 ${
+        <p className={`text-base font-semibold mb-6 ${
           pct === 100 ? 'text-emerald-700' : pct >= 60 ? 'text-amber-700' : 'text-[#78716C]'
         }`}>
           {statusLabel}
         </p>
+
+        {user ? (
+          <div className="mb-8 mx-auto inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#E7E0D8] bg-white">
+            <div
+              className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[9px] font-semibold"
+              style={{ backgroundColor: user.avatarColor }}
+            >
+              {user.avatarInitials}
+            </div>
+            <span className="text-[11px] text-[#78716C]">
+              {certified ? (
+                <>
+                  <Award className="inline w-3 h-3 -mt-0.5 mr-0.5 text-amber-600" />
+                  Saved as certification for {user.name.split(' ')[0]}
+                </>
+              ) : (
+                <>Saved to {user.name.split(' ')[0]}&apos;s history</>
+              )}
+            </span>
+          </div>
+        ) : (
+          <div className="mb-8 mx-auto inline-block px-3 py-2 rounded-xl bg-stone-50 border border-[#E7E0D8]">
+            <p className="text-[11px] text-[#78716C]">
+              Sign in from the home screen to save this as a certification.
+            </p>
+          </div>
+        )}
+
         <div className="space-y-3">
           <button
             onClick={restart}
