@@ -57,7 +57,8 @@ export function QuizClient({ quiz, property }: Props) {
         <p className="text-[#78716C] text-sm mb-10">{total} questions · ~3 minutes</p>
         <button
           onClick={() => setPhase('question')}
-          className="w-full py-4 bg-[#1C1917] hover:bg-stone-800 text-white font-semibold rounded-2xl transition-colors text-sm"
+          className="w-full py-4 text-white font-semibold rounded-2xl transition-opacity text-sm active:opacity-90"
+          style={{ backgroundColor: property.accentColor }}
         >
           Start →
         </button>
@@ -83,13 +84,15 @@ export function QuizClient({ quiz, property }: Props) {
         <div className="space-y-3">
           <button
             onClick={restart}
-            className="w-full py-3 border border-[#E7E0D8] hover:border-stone-400 text-[#1C1917] font-semibold rounded-2xl transition-colors text-sm"
+            className="w-full py-3 border-2 font-semibold rounded-2xl transition-opacity text-sm active:opacity-80"
+            style={{ borderColor: property.accentColor, color: property.accentColor }}
           >
             Try again
           </button>
           <Link
             href="/"
-            className="block w-full py-3 bg-[#1C1917] hover:bg-stone-800 text-white font-semibold rounded-2xl transition-colors text-sm"
+            className="block w-full py-3 text-white font-semibold rounded-2xl transition-opacity text-sm text-center active:opacity-90"
+            style={{ backgroundColor: property.accentColor }}
           >
             Back to stories
           </Link>
@@ -107,8 +110,8 @@ export function QuizClient({ quiz, property }: Props) {
         </Link>
         <div className="flex-1 bg-[#E7E0D8] rounded-full h-1">
           <div
-            className="bg-amber-600 h-1 rounded-full transition-all duration-300"
-            style={{ width: `${(current / total) * 100}%` }}
+            className="h-1 rounded-full transition-all duration-300"
+            style={{ width: `${(current / total) * 100}%`, backgroundColor: property.accentColor }}
           />
         </div>
         <span className="text-[#78716C] text-xs tabular-nums">{current + 1}/{total}</span>
