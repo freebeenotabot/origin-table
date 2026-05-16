@@ -91,16 +91,21 @@ export function CreatorStudio({ properties }: Props) {
 
   function startRecording(onText: (t: string) => void) {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const mr = new MediaRecorder(stream)
+      const mimeType = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'].find(
+        (t) => MediaRecorder.isTypeSupported(t)
+      ) ?? ''
+      const mr = new MediaRecorder(stream, mimeType ? { mimeType } : undefined)
       chunksRef.current = []
       mr.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data) }
       mr.onstop = async () => {
         stream.getTracks().forEach((t) => t.stop())
-        const blob = new Blob(chunksRef.current, { type: 'audio/webm' })
+        const actualType = mr.mimeType || mimeType || 'audio/webm'
+        const ext = actualType.includes('mp4') ? 'm4a' : 'webm'
+        const blob = new Blob(chunksRef.current, { type: actualType })
         setVoiceStep('processing')
         try {
           const fd = new FormData()
-          fd.append('file', blob, 'recording.webm')
+          fd.append('file', blob, `recording.${ext}`)
           const res = await fetch('/api/create/transcribe', { method: 'POST', body: fd })
           const data = await res.json()
           if (data.text) {
