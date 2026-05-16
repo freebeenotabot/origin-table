@@ -71,22 +71,26 @@ export function QuizClient({ quiz, property }: Props) {
 
   if (phase === 'intro') {
     return (
-      <div className="px-4 pt-16 max-w-md mx-auto text-center">
-        <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-2">
-          {property.restaurantName}
-        </p>
-        <h1 className="font-serif font-bold text-[#1C1917] text-2xl mb-3">{quiz.title}</h1>
-        <p className="text-[#78716C] text-sm mb-10">{total} questions · ~3 minutes</p>
-        <button
-          onClick={() => setPhase('question')}
-          className="w-full py-4 text-white font-semibold rounded-2xl transition-opacity text-sm active:opacity-90"
-          style={{ backgroundColor: property.accentColor }}
-        >
-          Start →
-        </button>
-        <Link href="/" className="block mt-4 text-[#78716C] hover:text-[#1C1917] text-sm transition-colors">
-          ← Back to stories
-        </Link>
+      <div className="px-4 pt-8 max-w-md mx-auto">
+        <div className="flex items-center mb-10">
+          <Link href="/" className="text-[#78716C] hover:text-[#1C1917] transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+          </Link>
+        </div>
+        <div className="text-center">
+          <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-2">
+            {property.restaurantName}
+          </p>
+          <h1 className="font-serif font-bold text-[#1C1917] text-2xl mb-3">{quiz.title}</h1>
+          <p className="text-[#78716C] text-sm mb-10">{total} questions · ~3 minutes</p>
+          <button
+            onClick={() => setPhase('question')}
+            className="w-full py-4 text-white font-semibold rounded-2xl transition-opacity text-sm active:opacity-90"
+            style={{ backgroundColor: property.accentColor }}
+          >
+            Start →
+          </button>
+        </div>
       </div>
     )
   }
@@ -161,7 +165,7 @@ export function QuizClient({ quiz, property }: Props) {
         <div className="flex-1 bg-[#E7E0D8] rounded-full h-1">
           <div
             className="h-1 rounded-full transition-all duration-300"
-            style={{ width: `${(current / total) * 100}%`, backgroundColor: property.accentColor }}
+            style={{ width: `${((current + 1) / total) * 100}%`, backgroundColor: property.accentColor }}
           />
         </div>
         <span className="text-[#78716C] text-xs tabular-nums">{current + 1}/{total}</span>
@@ -205,8 +209,10 @@ export function QuizClient({ quiz, property }: Props) {
       {/* Explanation + next */}
       {selected !== null && (
         <div className="space-y-4">
-          <div className="bg-stone-50 border border-[#E7E0D8] rounded-xl p-4">
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-2">Why</p>
+          <div className={`border rounded-xl p-4 ${selected === question.correctIndex ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
+            <p className={`text-[10px] font-semibold uppercase tracking-widest mb-2 ${selected === question.correctIndex ? 'text-emerald-700' : 'text-red-600'}`}>
+              {selected === question.correctIndex ? '✓ Correct' : '✗ Not quite'}
+            </p>
             <p className="text-[#78716C] text-sm leading-relaxed">{question.explanation}</p>
           </div>
           <button

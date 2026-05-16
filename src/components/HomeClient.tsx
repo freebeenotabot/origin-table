@@ -41,14 +41,6 @@ export default function HomeClient({ properties, allStories }: Props) {
             >
               <Trophy size={16} />
             </Link>
-            <Link
-              href={`/quiz/${activeId}`}
-              className="flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg transition-opacity active:opacity-70"
-              style={{ color: active.accentColor }}
-            >
-              <PenLine size={15} />
-              <span>Quiz</span>
-            </Link>
             <UserBadge />
           </div>
         </div>

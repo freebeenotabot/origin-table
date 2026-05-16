@@ -278,8 +278,13 @@ export function CreatorStudio({ properties }: Props) {
 
   if (phase === 'setup') {
     return (
-      <div className="px-4 pt-14 max-w-md mx-auto pb-16">
+      <div className="px-4 pt-8 max-w-md mx-auto pb-16">
         {cameraInput}
+        <div className="flex items-center mb-8">
+          <Link href="/" className="text-[#78716C] hover:text-[#1C1917] transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+          </Link>
+        </div>
         <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-2">
           Creator Studio
         </p>
@@ -357,9 +362,6 @@ export function CreatorStudio({ properties }: Props) {
         >
           Next →
         </button>
-        <Link href="/" className="block mt-4 text-[#78716C] text-sm text-center">
-          ← Back to stories
-        </Link>
       </div>
     )
   }
