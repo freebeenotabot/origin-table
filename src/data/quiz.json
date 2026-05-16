@@ -1,0 +1,200 @@
+{
+  "miramar": {
+    "propertyId": "miramar",
+    "title": "Caruso's — Ready Check",
+    "questions": [
+      {
+        "id": "m1",
+        "question": "Which two ocean sustainability programs certify Caruso's seafood sourcing?",
+        "options": [
+          "Smart Catch & Ocean Wise",
+          "MSC & Rainforest Alliance",
+          "Blue Ocean & Sea Watch",
+          "Monterey Aquarium & WWF"
+        ],
+        "correctIndex": 0,
+        "explanation": "Smart Catch (Monterey Bay Aquarium program) and Ocean Wise (Canadian conservation org) both evaluate species health and catch practices. If a species is flagged, it leaves the menu."
+      },
+      {
+        "id": "m2",
+        "question": "What is unique about the honey used in Caruso's dishes and cocktails?",
+        "options": [
+          "It comes from a beehive on the hotel property",
+          "It is imported from Tuscany",
+          "It is a blend of three California wildflowers",
+          "It is purchased from a Montecito farmers market"
+        ],
+        "correctIndex": 0,
+        "explanation": "The honey comes from a resident beehive maintained on the Miramar Beach property — the bees forage on coastal wildflowers, giving the honey a floral, lightly salted character."
+      },
+      {
+        "id": "m3",
+        "question": "Caruso's holds a Michelin Green Star in addition to its Michelin Star. What does the Green Star specifically recognize?",
+        "options": [
+          "Environmental sustainability leadership",
+          "Plant-based menu innovation",
+          "Zero-waste kitchen operations",
+          "Carbon-neutral certification"
+        ],
+        "correctIndex": 0,
+        "explanation": "The Michelin Green Star, introduced in 2020, specifically recognizes restaurants leading on sustainability — separate from culinary excellence. Caruso's is one of very few US recipients of both."
+      },
+      {
+        "id": "m4",
+        "question": "What percentage of Caruso's ingredients are locally sourced within California?",
+        "options": [
+          "Nearly 100%",
+          "Around 70%",
+          "At least 50%",
+          "The menu varies — no fixed target"
+        ],
+        "correctIndex": 0,
+        "explanation": "Nearly 100% of Caruso's ingredients are locally sourced — this is Chef Falsini's non-negotiable standard. If it can't be grown, raised, or caught in California, it doesn't belong on the menu."
+      },
+      {
+        "id": "m5",
+        "question": "Chef Massimo Falsini began his culinary career as:",
+        "options": [
+          "A dishwasher in Rome",
+          "A pastry apprentice in Milan",
+          "A line cook in New York",
+          "A fishing guide in Sicily"
+        ],
+        "correctIndex": 0,
+        "explanation": "Chef Falsini started as a dishwasher in Rome and worked his way through Michelin-starred kitchens across Europe before arriving in Montecito. The story connects Italian soul to California terroir."
+      }
+    ]
+  },
+  "bangkok": {
+    "propertyId": "bangkok",
+    "title": "Lakorn — Ready Check",
+    "questions": [
+      {
+        "id": "b1",
+        "question": "What does the name 'Massaman' most likely derive from?",
+        "options": [
+          "The Arabic/Persian word for Muslim — 'Musulman'",
+          "A Thai royal dynasty name",
+          "The name of a spice village in Southern Thailand",
+          "A chef who invented the dish in the 19th century"
+        ],
+        "correctIndex": 0,
+        "explanation": "Massaman curry entered Thailand via Muslim spice trade routes from the Middle East and Persia. The dish name is believed to derive from 'Musulman' — reflecting its cultural origins."
+      },
+      {
+        "id": "b2",
+        "question": "How long has Chef Bua (Pattama Chocklapphon) been practising royal Thai cuisine?",
+        "options": [
+          "30+ years",
+          "15 years",
+          "Since Lakorn opened in 2021",
+          "10 years"
+        ],
+        "correctIndex": 0,
+        "explanation": "Chef Bua has been practising royal Thai culinary traditions for over 30 years — she is not a contemporary chef exploring the tradition, she is a keeper of it."
+      },
+      {
+        "id": "b3",
+        "question": "Which farm supplies Lakorn's free-range chicken?",
+        "options": [
+          "Klongpai Farm",
+          "Sampran Farm",
+          "Khunta Farm",
+          "Raitong Farm"
+        ],
+        "correctIndex": 0,
+        "explanation": "Klongpai Farm supplies welfare-certified free-range chicken — no growth hormones, outdoor access required. Sampran Farm is the pork supplier; Khunta is beef; Raitong is the organic rice farm."
+      },
+      {
+        "id": "b4",
+        "question": "What transformation happens to durian when it is fried for the Massaman dish?",
+        "options": [
+          "Its pungency disappears and it becomes nutty and caramelized",
+          "It becomes sweeter and softer",
+          "Its texture becomes similar to tofu",
+          "It absorbs the curry's flavor completely"
+        ],
+        "correctIndex": 0,
+        "explanation": "Deep-frying durian removes its notorious pungency and creates a rich, caramelized, nutty crust — a completely different eating experience. It is considered the 'King of Fruits' in Thai culture."
+      },
+      {
+        "id": "b5",
+        "question": "Lakorn's menu covers how many regional Thai culinary traditions?",
+        "options": [
+          "Four — Northern, Northeastern, Southern, and Central",
+          "Two — Northern and Southern",
+          "Three — Bangkok, Chiang Mai, and Phuket styles",
+          "One — it focuses on royal Bangkok cuisine only"
+        ],
+        "correctIndex": 0,
+        "explanation": "Lakorn's 2024 repositioning was built around showcasing all four regions of Thailand: Northern, Northeastern (Isaan), Southern, and Central. Chef Bua and Executive Chef Narongrit together cover all four."
+      }
+    ]
+  },
+  "san-miguel": {
+    "propertyId": "san-miguel",
+    "title": "Pirules — Ready Check",
+    "questions": [
+      {
+        "id": "p1",
+        "question": "Who supplies all the chicken at Pirules — and what makes this supplier unique?",
+        "options": [
+          "Traspatio — a women-led cooperative whose profits go directly to rural women members",
+          "Vía Orgánica — a regenerative ranch in the Jalpan Valley",
+          "La Factoría — a local dairy farm with free-range poultry",
+          "Comepesca — a sustainable fishing cooperative that also raises poultry"
+        ],
+        "correctIndex": 0,
+        "explanation": "Traspatio is a women-led cooperative — every chicken order at Pirules directly funds the livelihoods of rural women in the Bajío region. No middlemen. This is the most powerful table story at this property."
+      },
+      {
+        "id": "p2",
+        "question": "What percentage of Pirules' dishes are cooked over open fire — ash, wood, or charcoal?",
+        "options": [
+          "80%",
+          "50%",
+          "30%",
+          "100%"
+        ],
+        "correctIndex": 0,
+        "explanation": "80% of all dishes at Pirules are cooked using fire techniques — ash roasting, wood smoke, or charcoal searing. This is an ancestral Central Mexican practice, not a trend."
+      },
+      {
+        "id": "p3",
+        "question": "What is the sourcing radius Chef Odín Rocha operates under at Pirules?",
+        "options": [
+          "60 miles — 99% of all ingredients",
+          "100 miles — for most ingredients",
+          "200 km — all of the Bajío region",
+          "Within San Miguel de Allende city limits"
+        ],
+        "correctIndex": 0,
+        "explanation": "Chef Rocha's 60-mile rule requires that 99% of every ingredient come from within 60 miles of the restaurant. The 1% exception is essentially salt. This constraint shapes every single dish on the menu."
+      },
+      {
+        "id": "p4",
+        "question": "What makes La Factoría's dairy products medically distinctive?",
+        "options": [
+          "They use genetic analysis to breed casein-free cattle — accessible to guests with dairy sensitivities",
+          "Their milk is certified A2 and ultra-pasteurized",
+          "They are the only certified organic dairy within 100 miles",
+          "Their cattle are fed on maguey leaves and nopal cactus"
+        ],
+        "correctIndex": 0,
+        "explanation": "La Factoría uses genetic analysis to identify and breed casein-free cattle. This produces milk, butter, and cheese that is naturally accessible to guests with common dairy sensitivities — without any industrial substitutes."
+      },
+      {
+        "id": "p5",
+        "question": "What technique is used for Pirules' barbacoa, and how old is it?",
+        "options": [
+          "Overnight pit roast lined with maguey leaves — a pre-Hispanic technique over 2,000 years old",
+          "Slow charcoal smoking over 12 hours — a colonial-era adaptation",
+          "Wood-fired oven roasting at low temperature — 19th century method",
+          "Open-flame spit roasting — indigenous technique from Oaxaca"
+        ],
+        "correctIndex": 0,
+        "explanation": "The barbacoa is slow-roasted overnight in a pit lined with maguey (agave) leaves — a pre-Hispanic preservation technique unchanged in 2,000 years. The leaves seal moisture and add a subtle mineral character."
+      }
+    ]
+  }
+}

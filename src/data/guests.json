@@ -1,0 +1,89 @@
+[
+  {
+    "id": "emma-chen",
+    "name": "Emma Chen",
+    "room": "401",
+    "arrivalTime": "18:30",
+    "propertyId": "san-miguel",
+    "avatarInitials": "EC",
+    "avatarColor": "#2D6A4F",
+    "tags": ["environmentalist", "women-rights"],
+    "tagLabels": {
+      "environmentalist": "Environmentalist",
+      "women-rights": "Women's Rights Advocate"
+    },
+    "notes": "VIP returning guest. Mentioned during last stay that she founded a women's cooperative in Vietnam. Do not offer any non-sustainable menu options without flagging sourcing.",
+    "leadStoryIds": ["pirules-traspatio", "pirules-sourcing", "caruso-certifications"],
+    "avoidTopics": ["dishes without sustainability certification", "any reference to industrial farming"],
+    "briefingTalkingPoints": [
+      "The chicken on tonight's menu comes from Traspatio — a women-led cooperative. Every order funds their livelihoods directly.",
+      "99% of this menu was sourced within 60 miles. The 1% is salt.",
+      "Pirules is working toward becoming the first plastic-free restaurant in Latin America — it's not a goal, it's a project in progress."
+    ]
+  },
+  {
+    "id": "james-park",
+    "name": "Dr. James Park",
+    "room": "215",
+    "arrivalTime": "19:00",
+    "propertyId": "miramar",
+    "avatarInitials": "JP",
+    "avatarColor": "#2563EB",
+    "tags": ["nutrition-focused", "wellness"],
+    "tagLabels": {
+      "nutrition-focused": "Nutrition Researcher",
+      "wellness": "Longevity-Focused"
+    },
+    "notes": "Longevity researcher based in Seoul and San Francisco. Interested in bioavailability, omega sourcing, and minimal-processing techniques. Does not eat red meat.",
+    "leadStoryIds": ["caruso-crab", "caruso-garden", "lakorn-farms"],
+    "avoidTopics": ["red meat", "heavy cream preparations", "anything described as 'indulgent'"],
+    "briefingTalkingPoints": [
+      "The king crab is certified by Smart Catch and Ocean Wise — both evaluate population health, not just catch method.",
+      "Chef Falsini grows the herbs in an on-property garden — 30 feet from the kitchen. The honey comes from a beehive on the same grounds.",
+      "We can speak to the omega-3 content of the seafood sourcing if he asks — the Ocean Wise certification requires this data."
+    ]
+  },
+  {
+    "id": "isabelle-moreau",
+    "name": "Isabelle Moreau",
+    "room": "312",
+    "arrivalTime": "20:00",
+    "propertyId": "bangkok",
+    "avatarInitials": "IM",
+    "avatarColor": "#C9A84C",
+    "tags": ["cultural-explorer", "aesthetics"],
+    "tagLabels": {
+      "cultural-explorer": "Food Anthropologist",
+      "aesthetics": "Design & Aesthetics"
+    },
+    "notes": "Food writer and anthropologist based in Paris. Has written extensively on Southeast Asian culinary traditions. Will ask detailed cultural context questions — be ready with the specific regional story, not just 'traditional Thai.'",
+    "leadStoryIds": ["lakorn-massaman", "lakorn-chef-bua", "pirules-fire"],
+    "avoidTopics": ["generic 'fusion' language", "describing things as 'Asian-inspired'", "approximating Thai culture"],
+    "briefingTalkingPoints": [
+      "Massaman is not just a Thai dish — it entered Thailand from Muslim spice trade routes. The word Massaman derives from 'Musulman.' This is Chef Bua's version, refined over 30 years.",
+      "Chef Bua trained in royal court techniques — a distinct discipline from street or home cooking. Ask her anything.",
+      "The crispy durian is from Southern Thailand specifically — durian quality is highly regional, like wine appellations."
+    ]
+  },
+  {
+    "id": "robert-ashford",
+    "name": "Robert Ashford",
+    "room": "108",
+    "arrivalTime": "19:30",
+    "propertyId": "miramar",
+    "avatarInitials": "RA",
+    "avatarColor": "#6B21A8",
+    "tags": ["vip-time-poor"],
+    "tagLabels": {
+      "vip-time-poor": "VIP — Prefers Brevity"
+    },
+    "notes": "Managing Director at a global PE firm. First visit. Does not appreciate lengthy explanations — lead with credentials and let him ask follow-up questions. Excellent tipping record. Prefers red wine.",
+    "leadStoryIds": ["caruso-certifications", "caruso-crab"],
+    "avoidTopics": ["long provenance stories unless asked", "detailed sustainability lectures"],
+    "briefingTalkingPoints": [
+      "Caruso's is one of very few US restaurants with both a Michelin Star and a Michelin Green Star.",
+      "The crab was in the ocean within 50 miles of this table.",
+      "Leave space for him to ask questions — he will if he's interested."
+    ]
+  }
+]

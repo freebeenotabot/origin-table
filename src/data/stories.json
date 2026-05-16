@@ -1,0 +1,341 @@
+[
+  {
+    "id": "caruso-crab",
+    "propertyId": "miramar",
+    "title": "California King Crab",
+    "subtitle": "Caught within 50 miles. Certified by two ocean watchdogs.",
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
+    "tags": ["sustainability", "local-farm", "award-winning", "seasonal"],
+    "layers": {
+      "headline": "Every king crab on this plate was swimming in California waters within 50 miles of this table. Chef Massimo Falsini refuses to fly seafood in — if it isn't local, it isn't on the menu.",
+      "story": "The signature dish is a California king crab risotto finished with pickled blueberries and Brentwood corn — three California ingredients, one plate. The crab is sourced through Caruso's dual certification with Smart Catch and Ocean Wise, both of which evaluate every supplier on environmental impact, bycatch practices, and ecosystem health. When a species becomes overfished, it disappears from the menu — no exceptions. The pickled blueberries come from small farms in the Carpinteria Valley, 15 miles south.",
+      "details": [
+        "Smart Catch: Monterey Bay Aquarium program certifying sustainable seafood sourcing",
+        "Ocean Wise: Canadian conservation org — only species with healthy population levels qualify",
+        "Brentwood corn: grown in Contra Costa County, prized for sweetness due to Delta microclimate",
+        "Blueberries: pickled in-house, from Carpinteria Valley farms (15 mi south of Montecito)",
+        "If a species is flagged by Ocean Wise, it rotates off the menu — this is non-negotiable",
+        "The risotto is finished with on-property honey from the resident Caruso's beehive"
+      ]
+    },
+    "pronounceTargets": [
+      {
+        "term": "Carpinteria",
+        "phonetic": "kar-pin-teh-REE-ah",
+        "language": "es"
+      },
+      {
+        "term": "Brentwood",
+        "phonetic": "BRENT-wood",
+        "language": "en"
+      },
+      {
+        "term": "risotto",
+        "phonetic": "ree-ZAW-toh",
+        "language": "it"
+      }
+    ],
+    "guestResonanceTags": ["environmentalist", "nutrition-focused", "wellness"]
+  },
+  {
+    "id": "caruso-garden",
+    "propertyId": "miramar",
+    "title": "The Chef's Garden & Resident Beehive",
+    "subtitle": "30 feet from kitchen to plate. The bees work here too.",
+    "imageUrl": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=800&q=80",
+    "tags": ["sustainability", "local-farm", "seasonal", "wellness"],
+    "layers": {
+      "headline": "Caruso's herbs and some vegetables grow in a dedicated chef's garden on the Miramar Beach property — 30 feet from the kitchen door. The property also maintains a resident beehive, and that honey goes directly into the food and cocktail program.",
+      "story": "Chef Massimo Falsini began his career as a dishwasher in Rome, worked through Michelin-starred kitchens across Europe, and arrived in Montecito with one conviction: the best ingredient is the one you grew yourself. The garden is tended by the culinary team and changes week by week as California seasons shift. The beehive produces a distinct coastal honey — floral with a salt edge from the sea breeze — used in vinaigrettes, glazes, and the bar's bee pollen cocktails. Guests can request a garden walk before dinner.",
+      "details": [
+        "Garden is on the hotel grounds, maintained by the kitchen team directly",
+        "Honey flavor profile: coastal wildflower — lavender, sage, fennel — with a mild salt finish from ocean air",
+        "Honey used in: salad dressings, fish glazes, bee pollen cocktails at the Miramar Bar",
+        "Chef Massimo Falsini background: started as dishwasher in Rome, trained through Michelin-starred kitchens",
+        "Garden walk available for guests on request — ask concierge to arrange",
+        "Seasonal herb highlight: summer = basil, mint, lemon verbena; winter = rosemary, thyme, sage"
+      ]
+    },
+    "pronounceTargets": [
+      {
+        "term": "Massimo Falsini",
+        "phonetic": "MAHS-see-moh fal-SEE-nee",
+        "language": "it"
+      },
+      {
+        "term": "Montecito",
+        "phonetic": "mon-teh-SEE-toh",
+        "language": "es"
+      },
+      {
+        "term": "lemon verbena",
+        "phonetic": "LEM-un ver-BEE-nah",
+        "language": "en"
+      }
+    ],
+    "guestResonanceTags": ["environmentalist", "wellness", "cultural-explorer"]
+  },
+  {
+    "id": "caruso-certifications",
+    "propertyId": "miramar",
+    "title": "Three Stars, Two Michelin, One Philosophy",
+    "subtitle": "The only California restaurant with a star for excellence AND a star for sustainability.",
+    "imageUrl": "https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=800&q=80",
+    "tags": ["award-winning", "sustainability", "wellness"],
+    "layers": {
+      "headline": "Caruso's holds a Michelin Star for culinary excellence AND a Michelin Green Star for environmental leadership — one of very few restaurants in the US with both. The Green Star isn't an add-on. It's earned by the same kitchen.",
+      "story": "In 2024, Caruso's also received the Food Made Good 3-Star award from the Sustainable Restaurant Association — the highest rating available, evaluating performance across Sourcing, Society, and Environment. The property has reduced CO2 emissions by 53% across its operations. Nearly 100% of ingredients at Caruso's are locally sourced — Chef Falsini's standard is: if it can't be grown, raised, or caught within California, it doesn't belong on this menu. The Michelin Green Star was introduced in 2020 specifically to recognize restaurants leading on sustainability — Caruso's was among the early US recipients.",
+      "details": [
+        "Michelin Star (Red): culinary excellence — awarded by anonymous Michelin inspectors",
+        "Michelin Green Star: sustainability leadership — awarded separately from the culinary star",
+        "Food Made Good 3-Star (2024): Sustainable Restaurant Association — top rating across Sourcing, Society, Environment",
+        "53% CO2 emissions reduction across the Miramar Beach property",
+        "Nearly 100% local sourcing at Caruso's — strictest standard in the Rosewood portfolio",
+        "Chef quote: 'When you work in harmony with mother nature you produce the most delicious and nourishing food.'"
+      ]
+    },
+    "pronounceTargets": [
+      {
+        "term": "Michelin",
+        "phonetic": "MISH-eh-lin",
+        "language": "fr"
+      },
+      {
+        "term": "sommelier",
+        "phonetic": "suh-mel-YAY",
+        "language": "fr"
+      }
+    ],
+    "guestResonanceTags": ["environmentalist", "vip-time-poor", "women-rights"]
+  },
+  {
+    "id": "lakorn-massaman",
+    "propertyId": "bangkok",
+    "title": "Massaman Nuea Tu Rian Tod",
+    "subtitle": "Royal Thai beef shank curry — with crispy durian. A palace dish at your table.",
+    "imageUrl": "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=800&q=80",
+    "tags": ["cultural-heritage", "seasonal", "award-winning"],
+    "layers": {
+      "headline": "This is Chef Bua's signature — a royal Thai court curry made with slow-braised beef shank and finished with crispy durian. Massaman has been cooked in Thai royal kitchens for centuries; this version has been made for 30 years by the same pair of hands.",
+      "story": "Massaman curry originates in the Muslim south of Thailand, carried north over trade routes and adapted into royal court cuisine over centuries. The word 'Massaman' is believed to derive from 'Musulman' — Muslim — reflecting the spice trade origins of the dish. Chef Bua (Pattama Chocklapphon) grew up in Southern Thailand where this dish is part of everyday life, and spent decades studying its royal adaptations. The durian used is from Southern Thailand — considered the 'King of Fruits' for its complexity and intensity. When fried, it loses its pungency and becomes a rich, caramelized, nutty crust. This dish is not on many menus in the world. It is on this one.",
+      "details": [
+        "Massaman: historical trade-route dish, Muslim-influenced, absorbed into royal Thai court cuisine",
+        "'Massaman' derives from 'Musulman' — reflecting Persian and Muslim spice trade origins",
+        "Durian sourced from Southern Thailand — 'King of Fruits' in Thai culture",
+        "Crispy durian: deep-fried preparation removes pungency, creates nutty caramelized crust",
+        "Beef shank: braised low and slow until collagen breaks down — technique is the same as royal kitchens used",
+        "Chef Bua has made this dish for 30+ years — not a menu item, a living tradition"
+      ]
+    },
+    "pronounceTargets": [
+      {
+        "term": "Massaman Nuea Tu Rian Tod",
+        "phonetic": "mah-sah-MAN noo-ah too REE-an tote",
+        "language": "th"
+      },
+      {
+        "term": "durian",
+        "phonetic": "DOO-ree-an",
+        "language": "th"
+      },
+      {
+        "term": "Massaman",
+        "phonetic": "mah-sah-MAN",
+        "language": "th"
+      }
+    ],
+    "guestResonanceTags": ["cultural-explorer", "wellness", "vip-time-poor"]
+  },
+  {
+    "id": "lakorn-chef-bua",
+    "propertyId": "bangkok",
+    "title": "Chef Bua — 30 Years, Royal Kitchen to Your Table",
+    "subtitle": "She learned from palace cooks. Now she teaches the next generation.",
+    "imageUrl": "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=800&q=80",
+    "tags": ["cultural-heritage", "women-led", "award-winning"],
+    "layers": {
+      "headline": "Pattama Chocklapphon — known as Chef Bua — is Lakorn's Thai Senior Sous Chef and the living thread connecting this restaurant to centuries of royal court cooking. She has been practising these techniques for over 30 years.",
+      "story": "Chef Bua grew up in Southern Thailand and trained in the tradition of royal Thai cuisine — dishes that were developed in the royal court for the king's table, characterized by precision, balance, and the use of rare regional ingredients. Royal Thai cooking is one of the most technically demanding in the world: every flavour has a hierarchy, every sauce has a prescribed balance of sour, salty, sweet, and heat. She has spent her career preserving and translating these techniques for a contemporary dining room. Her counterpart, Executive Chef Narongrit Kaewsuwan, brings Northern and coconut-based Thai perspectives — together they cover all four regions of Thailand in one kitchen. Lakorn's 2024 repositioning was built around making this depth visible to guests.",
+      "details": [
+        "Royal Thai cuisine: developed for the Siamese court — high precision, hierarchical flavor balance",
+        "Southern Thailand specialty: Gaeng Pu (blue crab in yellow curry with betel leaves)",
+        "Chef Bua's dishes also include: Pad Sarm Chun (stir-fried glass noodles with prawns)",
+        "Executive Chef Narongrit Kaewsuwan: Northern specialist — born in Nakhon Sawan, coconut curry traditions",
+        "Four regions covered: Northern, Northeastern (Isaan), Southern, and Central",
+        "Lakorn 2024 repositioning: designed to make regional Thai specificity the core guest experience"
+      ]
+    },
+    "pronounceTargets": [
+      {
+        "term": "Pattama Chocklapphon",
+        "phonetic": "pah-TAH-mah choke-LAH-pon",
+        "language": "th"
+      },
+      {
+        "term": "Kanom Jeen Nam Ngeow",
+        "phonetic": "kah-NOM jeen nam NGEW",
+        "language": "th"
+      },
+      {
+        "term": "Gaeng Pu",
+        "phonetic": "GANG poo",
+        "language": "th"
+      }
+    ],
+    "guestResonanceTags": ["cultural-explorer", "women-rights", "aesthetics"]
+  },
+  {
+    "id": "lakorn-farms",
+    "propertyId": "bangkok",
+    "title": "Partners in Provenance — Six Named Farms",
+    "subtitle": "Every protein, every rice grain — has a farm name and a face behind it.",
+    "imageUrl": "https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=800&q=80",
+    "tags": ["local-farm", "sustainability", "wellness"],
+    "layers": {
+      "headline": "Lakorn doesn't just say 'locally sourced.' Every animal, grain, and cheese on the menu has a named farm partner — and Rosewood's Partners in Provenance program holds each chef to a defined local sourcing radius.",
+      "story": "The Partners in Provenance program requires every Rosewood chef to define their sourcing radius and name their suppliers publicly. At Lakorn, that means six farm partners, each chosen for welfare standards and traceability. Klongpai Farm raises welfare-certified free-range chickens — no growth hormones, outdoor access required. Sampran Farm provides free-range pork using traditional Thai breed animals. Khunta Farm produces certified organic Black Angus beef. Little Goat Farm is an artisan farmstead producing goat cheese. Tanat Kaen Chan Farm grows organic pomelo — a fruit with deep Thai cultural significance, used in salads and garnishes. Raitong Farm supplies organic rice, the base of nearly every Thai meal.",
+      "details": [
+        "Klongpai Farm: welfare-certified free-range chicken — no growth hormones, outdoor ranging required",
+        "Sampran Farm: free-range pork, traditional Thai breed animals, no industrial feed",
+        "Khunta Farm: certified organic Black Angus beef",
+        "Little Goat Farm: artisan farmstead goat cheese — the only goat dairy operating at this scale in Thailand",
+        "Tanat Kaen Chan Farm: organic pomelo — pomelo has symbolic importance in Thai New Year (Songkran)",
+        "Raitong Farm: organic rice — Hom Mali (jasmine) variety, grown in Northern Thailand highlands",
+        "Partners in Provenance: Rosewood-wide program — each chef defines and publishes their sourcing radius"
+      ]
+    },
+    "pronounceTargets": [
+      {
+        "term": "Klongpai",
+        "phonetic": "KLONG-pie",
+        "language": "th"
+      },
+      {
+        "term": "Sampran",
+        "phonetic": "sam-PRAN",
+        "language": "th"
+      },
+      {
+        "term": "Hom Mali",
+        "phonetic": "hom MAH-lee",
+        "language": "th"
+      }
+    ],
+    "guestResonanceTags": ["environmentalist", "nutrition-focused", "women-rights"]
+  },
+  {
+    "id": "pirules-traspatio",
+    "propertyId": "san-miguel",
+    "title": "Traspatio — The Women Behind Every Chicken",
+    "subtitle": "When you order the chicken, you are funding these women's livelihoods. That's the whole story.",
+    "imageUrl": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80",
+    "tags": ["women-led", "sustainability", "local-farm", "zero-waste"],
+    "layers": {
+      "headline": "Every piece of chicken served at Pirules comes from Traspatio — a women-led cooperative of rural women in the Bajío region who raise and distribute free-range chickens. This is not a token sourcing decision. It is a direct economic lifeline.",
+      "story": "Traspatio was founded to create sustainable livelihoods for rural women who had limited access to formal employment. The cooperative model means profits return directly to the women doing the work — not to a middleman or a corporation. Chef Odín Rocha chose Traspatio as Pirules' exclusive poultry source because of the animal welfare practices and because the economic impact is traceable: you can point to a person and say, your order paid part of her income this month. The chickens are free-range, raised without growth hormones or antibiotics, and fed on natural grain. The Traspatio model is now being studied by agricultural development organizations as a template for rural women's economic inclusion in Mexico.",
+      "details": [
+        "Traspatio: women-led cooperative in the Bajío region — free-range poultry and distribution",
+        "All profits return to member women — no corporate intermediary",
+        "Chickens: free-range, no growth hormones, no antibiotics, fed on natural grain",
+        "Economic model: studied as a template for rural women's economic inclusion programs",
+        "Chef Odín Rocha: chose Traspatio as the EXCLUSIVE poultry source — not one of several, the only one",
+        "Talking point: 'When you taste this dish, you are part of this cooperative's story'"
+      ]
+    },
+    "pronounceTargets": [
+      {
+        "term": "Traspatio",
+        "phonetic": "tras-PAH-tee-oh",
+        "language": "es"
+      },
+      {
+        "term": "Bajío",
+        "phonetic": "bah-HEE-oh",
+        "language": "es"
+      },
+      {
+        "term": "Odín Rocha",
+        "phonetic": "oh-DEEN ROH-chah",
+        "language": "es"
+      }
+    ],
+    "guestResonanceTags": ["women-rights", "environmentalist", "cultural-explorer"]
+  },
+  {
+    "id": "pirules-fire",
+    "propertyId": "san-miguel",
+    "title": "Fire, Ash & Ancestral Flame",
+    "subtitle": "80% of this menu was cooked over open fire. This technique is older than any oven.",
+    "imageUrl": "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=800&q=80",
+    "tags": ["cultural-heritage", "fire-cooking", "seasonal"],
+    "layers": {
+      "headline": "At Pirules, 80% of all dishes are cooked over ash, wood, or charcoal — not because it's fashionable, but because these are the ancestral techniques of Central Mexico. No industrial oven can replicate what a live fire does to a vegetable.",
+      "story": "Chef Odín Rocha grew up in the State of Mexico where open-fire cooking is not a trend — it is how food has been prepared for thousands of years. Pre-Hispanic communities across Central Mexico developed sophisticated methods of fire management: slow ash roasting to caramelize root vegetables while preserving moisture, wood-smoke infusion to create layers of flavour impossible with gas, and charcoal searing at high temperatures to develop the Maillard reaction on proteins without added fat. At Pirules, these techniques are applied to entirely modern dishes — the ancestral method serves contemporary plating and seasonal ingredients. The seasonal harvest barbacoa is slow-roasted overnight in a pit lined with maguey leaves — a technique unchanged in 2,000 years.",
+      "details": [
+        "Three fire methods used: ash roasting (slow, gentle), wood smoke (flavor infusion), charcoal (high-heat searing)",
+        "Maillard reaction: the chemical browning that creates depth of flavor — fire achieves this without added fats",
+        "Barbacoa: overnight pit roast lined with maguey leaves — pre-Hispanic technique, 2,000+ years old",
+        "Maguey: agave plant — its leaves seal moisture in the pit and impart a subtle mineral character",
+        "No industrial ovens in the kitchen — every dish has contact with real fire",
+        "The fire kitchen reduces energy consumption vs. gas/electric significantly — sustainability benefit is structural, not performative"
+      ]
+    },
+    "pronounceTargets": [
+      {
+        "term": "barbacoa",
+        "phonetic": "bar-bah-KOH-ah",
+        "language": "es"
+      },
+      {
+        "term": "maguey",
+        "phonetic": "mah-GAY",
+        "language": "es"
+      },
+      {
+        "term": "Pirules",
+        "phonetic": "pee-ROO-les",
+        "language": "es"
+      }
+    ],
+    "guestResonanceTags": ["cultural-explorer", "wellness", "aesthetics"]
+  },
+  {
+    "id": "pirules-sourcing",
+    "propertyId": "san-miguel",
+    "title": "The 60-Mile Circle",
+    "subtitle": "99% of every ingredient — within 60 miles. The 1% is salt.",
+    "imageUrl": "https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=800&q=80",
+    "tags": ["sustainability", "local-farm", "zero-waste", "award-winning"],
+    "layers": {
+      "headline": "Chef Odín Rocha operates a 60-mile sourcing rule — 99% of every ingredient served at Pirules must come from within 60 miles of San Miguel de Allende. This isn't a marketing claim. It's a sourcing constraint that shapes every single dish on the menu.",
+      "story": "Three anchor suppliers make the 60-mile rule possible. La Factoría is a local dairy farm that uses genetic analysis to breed cattle producing casein-free milk — a rare innovation that makes the dairy accessible to guests with common milk sensitivities, without industrial processing. Vía Orgánica is a regenerative agriculture ranch in the Jalpan Valley that supplies vegetables grown using soil-restoration techniques — no synthetic fertilizers, crop rotation, and water harvesting. Comepesca is a sustainable fishing organization that manages sourcing from Lake Pátzcuaro and coastal partners operating within environmental guidelines. Together, these three suppliers cover dairy, produce, and protein — the entire base of the menu. The goal is to become the first completely plastic-free restaurant in Latin America.",
+      "details": [
+        "La Factoría: dairy farm using genetic analysis to produce casein-free milk, butter, and cheese",
+        "Casein-free: naturally accessible to guests with dairy sensitivities — no industrial substitutes needed",
+        "Vía Orgánica: regenerative ranch in Jalpan Valley — soil restoration, no synthetic fertilizers",
+        "Comepesca: sustainable fishing org — sources cured salmon trout from Lake Pátzcuaro",
+        "Lake Pátzcuaro trout: endemic species managed under sustainable catch limits",
+        "Zero plastic goal: working toward first plastic-free restaurant in Latin America — packaging, delivery, and kitchen",
+        "GSTC certified · Zero Waste certified · Food Made Good 3-Star (same as Caruso's)"
+      ]
+    },
+    "pronounceTargets": [
+      {
+        "term": "Vía Orgánica",
+        "phonetic": "VEE-ah or-GAH-nee-kah",
+        "language": "es"
+      },
+      {
+        "term": "Comepesca",
+        "phonetic": "koh-meh-PES-kah",
+        "language": "es"
+      },
+      {
+        "term": "Pátzcuaro",
+        "phonetic": "PAHTS-kwah-roh",
+        "language": "es"
+      }
+    ],
+    "guestResonanceTags": ["environmentalist", "nutrition-focused", "wellness"]
+  }
+]

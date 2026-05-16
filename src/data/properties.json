@@ -1,0 +1,68 @@
+[
+  {
+    "id": "miramar",
+    "restaurantName": "Caruso's",
+    "propertyFullName": "Rosewood Miramar Beach",
+    "location": "Montecito, California, USA",
+    "heroImageUrl": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=80",
+    "cardImageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
+    "tagline": "California coastal fine dining — where land, sea, and season tell one story",
+    "chefName": "Chef Massimo Falsini",
+    "chefOrigin": "Rome, Italy",
+    "accentColor": "#2D6A4F",
+    "philosophy": "Nothing is flown in. Every ingredient has a California address.",
+    "highlights": [
+      "Michelin One Star",
+      "Michelin Green Star",
+      "Food Made Good 3-Star (Sustainable Restaurant Association)",
+      "Smart Catch Program Ambassador",
+      "Ocean Wise Partner",
+      "Nearly 100% locally sourced ingredients",
+      "On-property chef's garden and resident beehive"
+    ],
+    "storyCardIds": ["caruso-crab", "caruso-garden", "caruso-certifications"]
+  },
+  {
+    "id": "bangkok",
+    "restaurantName": "Lakorn",
+    "propertyFullName": "Rosewood Bangkok",
+    "location": "Bangkok, Thailand",
+    "heroImageUrl": "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80",
+    "cardImageUrl": "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=800&q=80",
+    "tagline": "All four regions of Thailand — at one table, with one story per farm",
+    "chefName": "Chef Bua (Pattama Chocklapphon)",
+    "chefOrigin": "Southern Thailand",
+    "accentColor": "#C9A84C",
+    "philosophy": "Royal Thai heritage dishes, reimagined — sourced from named local farms within a defined radius.",
+    "highlights": [
+      "Four-region Thai cuisine under one roof",
+      "Chef Bua: 30+ years, specialist in Royal Thai cuisine",
+      "Partners in Provenance: 6 named local farm partners",
+      "Klongpai Farm (free-range chicken), Sampran Farm (free-range pork), Khunta Farm (organic Black Angus)",
+      "Little Goat Farm (artisan farmstead cheese), Tanat Kaen Chan Farm (organic pomelo), Raitong Farm (organic rice)"
+    ],
+    "storyCardIds": ["lakorn-massaman", "lakorn-chef-bua", "lakorn-farms"]
+  },
+  {
+    "id": "san-miguel",
+    "restaurantName": "Pirules Garden Kitchen",
+    "propertyFullName": "Rosewood San Miguel de Allende",
+    "location": "San Miguel de Allende, Mexico",
+    "heroImageUrl": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=1200&q=80",
+    "cardImageUrl": "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=800&q=80",
+    "tagline": "99% local. Fire-cooked. Women-led supply chain. Zero waste — the full circle.",
+    "chefName": "Chef Odín Rocha",
+    "chefOrigin": "State of Mexico, Mexico",
+    "accentColor": "#B5451B",
+    "philosophy": "Chefs cannot change the world alone — but we can transform kitchens, and the sum of those transformations can.",
+    "highlights": [
+      "99% of ingredients sourced within 60 miles",
+      "80% of dishes cooked over ash, wood, or charcoal — ancestral techniques",
+      "Traspatio: women-led poultry cooperative supplies all restaurant chicken",
+      "Goal: first plastic-free restaurant in Latin America",
+      "GSTC, Zero Waste, and Food Made Good 3-Star certified",
+      "Huichol mirrors and ceramics by local artist Daniel Orozco"
+    ],
+    "storyCardIds": ["pirules-traspatio", "pirules-fire", "pirules-sourcing"]
+  }
+]
