@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Volume2, CalendarDays } from 'lucide-react'
+import { CalendarDays } from 'lucide-react'
 import type { StoryCard as StoryCardType } from '@/lib/types'
 import TagChip from './TagChip'
 
@@ -9,8 +9,6 @@ interface Props {
 }
 
 export default function StoryCard({ story, accentColor }: Props) {
-  const firstPronounce = story.pronounceTargets[0]
-
   return (
     <Link href={`/stories/${story.id}`} className="block">
       <div className="bg-white rounded-2xl shadow-sm border border-[#E7E0D8] overflow-hidden active:scale-[0.98] transition-transform">
@@ -22,7 +20,7 @@ export default function StoryCard({ story, accentColor }: Props) {
           />
         </div>
         <div className="p-3">
-          <h3 className="font-serif font-semibold text-[14px] text-[#1C1917] leading-snug">
+          <h3 className="font-serif font-semibold text-[14px] text-[#1C1917] leading-snug line-clamp-2">
             {story.title}
           </h3>
           {story.seasonalPeriod && (
@@ -43,16 +41,6 @@ export default function StoryCard({ story, accentColor }: Props) {
               <TagChip key={tag} tag={tag} />
             ))}
           </div>
-
-          {firstPronounce && (
-            <div
-              className="mt-2 inline-flex items-center gap-1 text-[11px] font-medium rounded-full border px-2 py-0.5"
-              style={{ color: accentColor, borderColor: `${accentColor}40` }}
-            >
-              <Volume2 size={10} />
-              <span>{firstPronounce.term}</span>
-            </div>
-          )}
         </div>
       </div>
     </Link>

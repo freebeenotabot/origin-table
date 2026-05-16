@@ -1,15 +1,15 @@
 import { TAG_LABELS } from '@/lib/data'
 
 const TAG_STYLES: Record<string, string> = {
-  sustainability: 'bg-emerald-100 text-emerald-800',
-  'women-led': 'bg-rose-100 text-rose-800',
-  'local-farm': 'bg-lime-100 text-lime-800',
-  'cultural-heritage': 'bg-amber-100 text-amber-800',
-  seasonal: 'bg-sky-100 text-sky-800',
-  wellness: 'bg-teal-100 text-teal-800',
-  'award-winning': 'bg-yellow-100 text-yellow-800',
-  'fire-cooking': 'bg-orange-100 text-orange-800',
-  'zero-waste': 'bg-green-100 text-green-800',
+  sustainability:       'bg-stone-100 text-stone-600',
+  'women-led':          'bg-rose-50 text-rose-700',
+  'local-farm':         'bg-stone-100 text-stone-600',
+  'cultural-heritage':  'bg-amber-50 text-amber-800',
+  seasonal:             'bg-stone-100 text-stone-600',
+  wellness:             'bg-stone-100 text-stone-600',
+  'award-winning':      'bg-amber-50 text-amber-800',
+  'fire-cooking':       'bg-orange-50 text-orange-800',
+  'zero-waste':         'bg-stone-100 text-stone-600',
 }
 
 export default function TagChip({ tag }: { tag: string }) {

@@ -30,7 +30,7 @@ export function QuizClient({ quiz, property }: Props) {
   const isLast = current === total - 1
   const pct = Math.round((score / total) * 100)
   const statusLabel =
-    pct < 60 ? 'Keep studying 📖' : pct < 100 ? 'Almost ready 👍' : 'Ready for service ✓'
+    pct < 60 ? 'Keep studying — review the stories' : pct < 100 ? 'Almost ready' : 'Ready for service ✓'
   const certified = pct >= 60
 
   // Persist attempt exactly once when entering the result phase with a logged-in user.
@@ -98,7 +98,6 @@ export function QuizClient({ quiz, property }: Props) {
   if (phase === 'result') {
     return (
       <div className="px-4 pt-16 max-w-md mx-auto text-center">
-        <p className="text-4xl mb-4">{pct === 100 ? '🌟' : pct >= 60 ? '👍' : '📖'}</p>
         <p className="font-serif font-bold text-[#1C1917] text-4xl mb-2">
           {score}/{total}
         </p>
@@ -183,9 +182,9 @@ export function QuizClient({ quiz, property }: Props) {
           const isChosen = i === selected
           let cls = 'border-[#E7E0D8] bg-white text-[#1C1917] hover:border-stone-400 cursor-pointer'
           if (selected !== null) {
-            if (isCorrect) cls = 'border-emerald-400 bg-emerald-50 text-emerald-900 cursor-default'
-            else if (isChosen) cls = 'border-red-400 bg-red-50 text-red-900 cursor-default'
-            else cls = 'border-[#E7E0D8] bg-white text-[#78716C] cursor-default'
+            if (isCorrect) cls = 'border-emerald-200 bg-emerald-50/60 text-emerald-800 cursor-default'
+            else if (isChosen) cls = 'border-[#E7E0D8] bg-stone-50 text-[#78716C] line-through cursor-default'
+            else cls = 'border-[#E7E0D8] bg-white/50 text-[#A8A09A] cursor-default'
           }
           return (
             <button
@@ -209,9 +208,9 @@ export function QuizClient({ quiz, property }: Props) {
       {/* Explanation + next */}
       {selected !== null && (
         <div className="space-y-4">
-          <div className={`border rounded-xl p-4 ${selected === question.correctIndex ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
-            <p className={`text-[10px] font-semibold uppercase tracking-widest mb-2 ${selected === question.correctIndex ? 'text-emerald-700' : 'text-red-600'}`}>
-              {selected === question.correctIndex ? '✓ Correct' : '✗ Not quite'}
+          <div className="border border-[#E7E0D8] rounded-xl p-4 bg-[#FAF7F2]">
+            <p className="text-[10px] font-semibold uppercase tracking-widest mb-2 text-[#78716C]">
+              {selected === question.correctIndex ? '✓ Correct' : 'Not quite'}
             </p>
             <p className="text-[#78716C] text-sm leading-relaxed">{question.explanation}</p>
           </div>
