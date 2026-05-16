@@ -52,14 +52,3 @@ export const TAG_LABELS: Record<string, string> = {
   'zero-waste': 'Zero Waste',
 }
 
-export const TAG_COLORS: Record<string, string> = {
-  sustainability: 'bg-emerald-900 text-emerald-300',
-  'women-led': 'bg-pink-900 text-pink-300',
-  'local-farm': 'bg-lime-900 text-lime-300',
-  'cultural-heritage': 'bg-amber-900 text-amber-300',
-  seasonal: 'bg-sky-900 text-sky-300',
-  wellness: 'bg-teal-900 text-teal-300',
-  'award-winning': 'bg-yellow-900 text-yellow-300',
-  'fire-cooking': 'bg-orange-900 text-orange-300',
-  'zero-waste': 'bg-green-900 text-green-300',
-}
