@@ -1,4 +1,12 @@
-import type { Property, StoryCard, GuestProfile, QuizBank, PropertyId } from './types'
+import type {
+  Property,
+  StoryCard,
+  GuestProfile,
+  QuizBank,
+  PropertyId,
+  Employee,
+  QuizAttempt,
+} from './types'
 import { getCreatedStories } from './store'
 
 // Import JSON — Next.js resolves these at build time
@@ -6,11 +14,18 @@ import _properties from '@/data/properties.json'
 import _stories from '@/data/stories.json'
 import _guests from '@/data/guests.json'
 import _quiz from '@/data/quiz.json'
+import _employees from '@/data/employees.json'
+import _seedAttempts from '@/data/quiz-attempts.json'
 
 export const properties = _properties as Property[]
 export const stories = _stories as StoryCard[]
 export const guests = _guests as GuestProfile[]
 export const quizBank = _quiz as QuizBank
+export const employees = _employees as Employee[]
+export const seedAttempts = _seedAttempts as QuizAttempt[]
+
+// A passing score certifies the employee on that property's menu story.
+export const CERT_THRESHOLD = 60
 
 // Helpers used across multiple components / routes
 
@@ -38,6 +53,19 @@ export function getStoriesForGuest(guest: GuestProfile): StoryCard[] {
 
 export function getQuiz(propertyId: PropertyId) {
   return quizBank[propertyId] ?? null
+}
+
+// Employee helpers
+export function getEmployee(email: string): Employee | undefined {
+  return employees.find((e) => e.email === email)
+}
+
+export function getDirectReports(managerEmail: string): Employee[] {
+  return employees.filter((e) => e.managerEmail === managerEmail)
+}
+
+export function getEmployeesByProperty(propertyId: PropertyId): Employee[] {
+  return employees.filter((e) => e.propertyId === propertyId)
 }
 
 // Tag display helpers

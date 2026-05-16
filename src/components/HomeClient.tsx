@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { PenLine, Plus } from 'lucide-react'
+import { PenLine, Plus, Trophy } from 'lucide-react'
 import type { Property, StoryCard as StoryCardType, PropertyId } from '@/lib/types'
 import PropertyNav from '@/components/PropertyNav'
 import StoryCard from '@/components/StoryCard'
+import UserBadge from '@/components/UserBadge'
 
 interface Props {
   properties: Property[]
@@ -34,6 +35,13 @@ export default function HomeClient({ properties, allStories }: Props) {
               <span>Create</span>
             </Link>
             <Link
+              href="/leaderboard"
+              aria-label="Leaderboard"
+              className="p-2 text-[#78716C] active:opacity-70 transition-opacity"
+            >
+              <Trophy size={16} />
+            </Link>
+            <Link
               href={`/quiz/${activeId}`}
               className="flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg transition-opacity active:opacity-70"
               style={{ color: active.accentColor }}
@@ -41,6 +49,7 @@ export default function HomeClient({ properties, allStories }: Props) {
               <PenLine size={15} />
               <span>Quiz</span>
             </Link>
+            <UserBadge />
           </div>
         </div>
         <PropertyNav
