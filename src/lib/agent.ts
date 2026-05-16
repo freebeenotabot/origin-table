@@ -43,7 +43,7 @@ export async function generateQuestions(input: GenerateQuestionsInput): Promise<
     ? `\nWeb research context (for inspiration):\n${searchResults.map((r) => `- ${r.title}: ${r.snippet}`).join('\n')}`
     : ''
 
-  const prompt = `A ${role} at ${propertyName} (${propertyLocation}) shared information about their creation. Generate 3-5 specific probing questions to uncover hidden stories that floor staff would love to share with guests.
+  const prompt = `A ${role} at ${propertyName} (${propertyLocation}) shared information about their creation. Generate EXACTLY 3 short, focused questions to uncover hidden stories that floor staff would love to share with guests.
 
 Creation: ${creationTitle}
 
@@ -51,9 +51,9 @@ What the creator shared:
 ${braindump}
 ${searchCtx}
 
-Focus on: behind-the-scenes moments, specialty techniques, personal stories, sourcing relationships, cultural significance, design decisions, or what makes it unique and memorable.
+Focus on: behind-the-scenes moments, specialty techniques, personal stories, sourcing relationships, cultural significance, or what makes it unique.
 
-Return ONLY a JSON array of question strings, no other text:
+Return ONLY a JSON array of exactly 3 question strings, no other text:
 ["question 1", "question 2", "question 3"]`
 
   const message = await client.messages.create({
@@ -112,12 +112,14 @@ Return a JSON object (no markdown fences) with EXACTLY this structure:
   "pronounceTargets": [
     {"term": "hard-to-pronounce ingredient or term", "phonetic": "fon-ET-ik", "language": "origin language"}
   ],
-  "guestResonanceTags": []
+  "guestResonanceTags": [],
+  "imageKeywords": ["keyword1", "keyword2", "keyword3"]
 }
 
 Valid tags (choose relevant): ${VALID_TAGS.join(', ')}
 Valid guestResonanceTags (choose relevant): ${VALID_GUEST_TAGS.join(', ')}
-If there are no hard-to-pronounce terms, return pronounceTargets as [].`
+If there are no hard-to-pronounce terms, return pronounceTargets as [].
+imageKeywords: 3-5 English words suitable for an image search (food/ingredient/art names, cooking method, visual style).`
 
   const imageContent = imageDataUrl ? parseDataUrl(imageDataUrl) : null
   const userContent: Anthropic.MessageParam['content'] = imageContent

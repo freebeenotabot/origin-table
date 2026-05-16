@@ -1,138 +1,116 @@
 'use client'
 
-import { useState, useRef, ChangeEvent } from 'react'
+import { useState, useRef, useEffect, ChangeEvent } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Mic, Loader2, Upload, X, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, Camera, Mic, PenLine, Loader2, X, CheckCircle2 } from 'lucide-react'
 import type { Property, StoryCard, PropertyId } from '@/lib/types'
 import TagChip from '@/components/TagChip'
+import PronounceButton from '@/components/PronounceButton'
 
 const ROLES = ['Chef', 'Pastry Chef', 'Resident Artist', 'Designer', 'Sommelier', 'Mixologist']
 
-type Phase =
-  | 'setup'
-  | 'braindump'
-  | 'loading-questions'
-  | 'qa'
-  | 'synthesizing'
-  | 'preview'
-  | 'published'
+const VOICE_PROMPTS = [
+  'What makes this creation special?',
+  'Where did the inspiration come from?',
+  'Any interesting sourcing — local farms, special suppliers?',
+  'What technique or ritual is involved?',
+  "What's one thing every guest should know?",
+]
+
+const WAVE_HEIGHTS = [10, 20, 14, 22, 12, 18, 8]
+
+type Phase = 'setup' | 'input' | 'loading-questions' | 'qa' | 'synthesizing' | 'preview' | 'published'
+type InputMode = null | 'camera' | 'voice' | 'text'
 
 interface Props {
   properties: Property[]
 }
 
-// ── VoiceButton ────────────────────────────────────────────────────────────────
-
-function VoiceButton({
-  recording,
-  transcribing,
-  onStart,
-  onStop,
-  accentColor,
-}: {
-  recording: boolean
-  transcribing: boolean
-  onStart: () => void
-  onStop: () => void
-  accentColor: string
-}) {
-  if (transcribing) {
-    return (
-      <div className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#E7E0D8] text-sm text-[#78716C] bg-white">
-        <Loader2 size={14} className="animate-spin" />
-        <span>Transcribing...</span>
-      </div>
-    )
-  }
-  if (recording) {
-    return (
-      <button
-        onClick={onStop}
-        className="flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-red-400 text-sm text-red-600 bg-red-50"
-      >
-        <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-        <span>Stop</span>
-      </button>
-    )
-  }
-  return (
-    <button
-      onClick={onStart}
-      className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#E7E0D8] text-sm text-[#78716C] bg-white hover:border-stone-400 transition-colors"
-      style={{}}
-    >
-      <Mic size={14} style={{ color: accentColor }} />
-      <span>Voice</span>
-    </button>
-  )
-}
-
-// ── CreatorStudio ──────────────────────────────────────────────────────────────
-
 export function CreatorStudio({ properties }: Props) {
+  // ── Setup state ──────────────────────────────────────────────────────────────
   const [phase, setPhase] = useState<Phase>('setup')
-
-  // Setup state
+  const [inputMode, setInputMode] = useState<InputMode>(null)
   const [role, setRole] = useState('')
   const [propertyId, setPropertyId] = useState<PropertyId | ''>('')
   const [creationTitle, setCreationTitle] = useState('')
 
-  // Braindump state
-  const [braindump, setBraindump] = useState('')
+  // ── Input content ────────────────────────────────────────────────────────────
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null)
+  const [textInput, setTextInput] = useState('')
+  const [voiceTranscript, setVoiceTranscript] = useState('')
+  const [braindump, setBraindump] = useState('')
 
-  // Q&A state
+  // ── Voice recording ──────────────────────────────────────────────────────────
+  const [recording, setRecording] = useState(false)
+  const [transcribing, setTranscribing] = useState(false)
+  const [voicePromptIndex, setVoicePromptIndex] = useState(0)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const chunksRef = useRef<Blob[]>([])
+
+  // ── Q&A ──────────────────────────────────────────────────────────────────────
   const [questions, setQuestions] = useState<string[]>([])
   const [qaIndex, setQaIndex] = useState(0)
   const [answers, setAnswers] = useState<string[]>([])
   const [currentAnswer, setCurrentAnswer] = useState('')
 
-  // Generated card state
+  // ── Generated card ───────────────────────────────────────────────────────────
   const [generatedCard, setGeneratedCard] = useState<StoryCard | null>(null)
   const [editTitle, setEditTitle] = useState('')
   const [editSubtitle, setEditSubtitle] = useState('')
   const [editHeadline, setEditHeadline] = useState('')
-
   const [publishedId, setPublishedId] = useState<string | null>(null)
 
-  // Voice recording state
-  const [recording, setRecording] = useState(false)
-  const [transcribing, setTranscribing] = useState(false)
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
-  const chunksRef = useRef<Blob[]>([])
+  const cameraInputRef = useRef<HTMLInputElement | null>(null)
 
   const activeProperty = properties.find((p) => p.id === propertyId)
   const accentColor = activeProperty?.accentColor ?? '#1C1917'
 
-  // ── Voice helpers ────────────────────────────────────────────────────────────
+  // Cycle voice prompts while recording
+  useEffect(() => {
+    if (!recording) { setVoicePromptIndex(0); return }
+    const id = setInterval(() => setVoicePromptIndex((i) => (i + 1) % VOICE_PROMPTS.length), 4000)
+    return () => clearInterval(id)
+  }, [recording])
 
-  function startRecording(onText: (text: string) => void) {
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then((stream) => {
-        const mr = new MediaRecorder(stream)
-        chunksRef.current = []
-        mr.ondataavailable = (e) => {
-          if (e.data.size > 0) chunksRef.current.push(e.data)
-        }
-        mr.onstop = async () => {
-          stream.getTracks().forEach((t) => t.stop())
-          const blob = new Blob(chunksRef.current, { type: 'audio/webm' })
-          setTranscribing(true)
-          try {
-            const fd = new FormData()
-            fd.append('file', blob, 'recording.webm')
-            const res = await fetch('/api/create/transcribe', { method: 'POST', body: fd })
-            const data = await res.json()
-            if (data.text) onText(data.text)
-          } catch {}
-          setTranscribing(false)
-        }
-        mr.start()
-        setRecording(true)
-        mediaRecorderRef.current = mr
-      })
-      .catch(() => {})
+  // ── Camera ───────────────────────────────────────────────────────────────────
+
+  function openCamera() {
+    setTimeout(() => cameraInputRef.current?.click(), 50)
+  }
+
+  function handleCameraCapture(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => setImageDataUrl(reader.result as string)
+    reader.readAsDataURL(file)
+    e.target.value = ''
+  }
+
+  // ── Voice recording ──────────────────────────────────────────────────────────
+
+  function startRecording(onText: (t: string) => void) {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      const mr = new MediaRecorder(stream)
+      chunksRef.current = []
+      mr.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data) }
+      mr.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop())
+        const blob = new Blob(chunksRef.current, { type: 'audio/webm' })
+        setTranscribing(true)
+        try {
+          const fd = new FormData()
+          fd.append('file', blob, 'recording.webm')
+          const res = await fetch('/api/create/transcribe', { method: 'POST', body: fd })
+          const data = await res.json()
+          if (data.text) onText(data.text)
+        } catch {}
+        setTranscribing(false)
+      }
+      mr.start()
+      setRecording(true)
+      mediaRecorderRef.current = mr
+    }).catch(() => {})
   }
 
   function stopRecording() {
@@ -140,34 +118,33 @@ export function CreatorStudio({ properties }: Props) {
     setRecording(false)
   }
 
-  // ── Image upload ─────────────────────────────────────────────────────────────
-
-  function handleImageUpload(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const reader = new FileReader()
-    reader.onload = () => setImageDataUrl(reader.result as string)
-    reader.readAsDataURL(file)
-  }
-
   // ── Phase transitions ────────────────────────────────────────────────────────
 
   function handleSetupNext() {
     if (!role || !propertyId || !creationTitle.trim()) return
-    setPhase('braindump')
+    setPhase('input')
+    setInputMode(null)
   }
 
-  async function handleBraindumpNext() {
-    if (!braindump.trim()) return
+  async function handleInputNext() {
+    const bd =
+      voiceTranscript ||
+      textInput ||
+      (imageDataUrl ? `Creator shared a photo of their ${creationTitle}` : '')
+    setBraindump(bd)
+    await startQuestionFlow(bd)
+  }
+
+  async function startQuestionFlow(bd: string) {
     setPhase('loading-questions')
     try {
       const res = await fetch('/api/create/questions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role, propertyId, creationTitle, braindump }),
+        body: JSON.stringify({ role, propertyId, creationTitle, braindump: bd }),
       })
       const data = await res.json()
-      const qs: string[] = data.questions ?? []
+      const qs: string[] = (data.questions ?? []).slice(0, 3)
       if (qs.length > 0) {
         setQuestions(qs)
         setQaIndex(0)
@@ -176,11 +153,11 @@ export function CreatorStudio({ properties }: Props) {
         setPhase('qa')
       } else {
         setPhase('synthesizing')
-        await doSynthesize([])
+        await doSynthesize(bd, [])
       }
     } catch {
       setPhase('synthesizing')
-      await doSynthesize([])
+      await doSynthesize(bd, [])
     }
   }
 
@@ -189,25 +166,31 @@ export function CreatorStudio({ properties }: Props) {
     const allAnswers = [...answers, answer]
     setAnswers(allAnswers)
     setCurrentAnswer('')
-
     if (qaIndex + 1 >= questions.length) {
       setPhase('synthesizing')
-      await doSynthesize(allAnswers)
+      await doSynthesize(braindump, allAnswers)
     } else {
       setQaIndex((i) => i + 1)
     }
   }
 
-  async function doSynthesize(allAnswers: string[]) {
+  function handleQaBack() {
+    setCurrentAnswer('')
+    if (qaIndex > 0) setQaIndex((i) => i - 1)
+    else setPhase('input')
+  }
+
+  async function doSynthesize(bd: string, allAnswers: string[]) {
     const transcript = [
       `[Creator: ${role}]`,
       `Creation: ${creationTitle}`,
       '',
       'What the creator shared:',
-      braindump,
+      bd || '(no additional context)',
       '',
-      questions.length > 0 ? 'Q&A Session:' : '',
-      ...questions.map((q, i) => `Q: ${q}\nA: ${allAnswers[i] || '(skipped)'}`),
+      ...(questions.length > 0
+        ? ['Q&A Session:', ...questions.map((q, i) => `Q: ${q}\nA: ${allAnswers[i] || '(skipped)'}`)]
+        : []),
     ]
       .filter(Boolean)
       .join('\n')
@@ -246,11 +229,14 @@ export function CreatorStudio({ properties }: Props) {
 
   function restart() {
     setPhase('setup')
+    setInputMode(null)
     setRole('')
     setPropertyId('')
     setCreationTitle('')
-    setBraindump('')
     setImageDataUrl(null)
+    setTextInput('')
+    setVoiceTranscript('')
+    setBraindump('')
     setQuestions([])
     setQaIndex(0)
     setAnswers([])
@@ -259,20 +245,47 @@ export function CreatorStudio({ properties }: Props) {
     setPublishedId(null)
   }
 
-  // ── Render ───────────────────────────────────────────────────────────────────
+  // Hidden camera input — always in DOM so ref is valid across phase changes
+  const cameraInput = (
+    <input
+      ref={cameraInputRef}
+      type="file"
+      accept="image/*"
+      capture="environment"
+      className="sr-only"
+      onChange={handleCameraCapture}
+    />
+  )
+
+  // Progress bar helper
+  function ProgressBar({ pct, back }: { pct: number; back: () => void }) {
+    return (
+      <div className="flex items-center gap-3 mb-8">
+        <button onClick={back} className="text-[#78716C]">
+          <ArrowLeft className="w-4 h-4" />
+        </button>
+        <div className="flex-1 bg-[#E7E0D8] rounded-full h-1">
+          <div
+            className="h-1 rounded-full transition-all duration-500"
+            style={{ width: `${pct}%`, backgroundColor: accentColor }}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  // ── SETUP ────────────────────────────────────────────────────────────────────
 
   if (phase === 'setup') {
     return (
-      <div className="px-4 pt-14 max-w-md mx-auto pb-12">
+      <div className="px-4 pt-14 max-w-md mx-auto pb-16">
+        {cameraInput}
         <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-2">
           Creator Studio
         </p>
         <h1 className="font-serif font-bold text-[#1C1917] text-2xl mb-1">Add a Story</h1>
-        <p className="text-[#78716C] text-sm mb-8">
-          Share your creation — any format, rough is fine.
-        </p>
+        <p className="text-[#78716C] text-sm mb-8">Any format, rough is fine.</p>
 
-        {/* Role chips */}
         <div className="mb-6">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-3">
             Your role
@@ -295,7 +308,6 @@ export function CreatorStudio({ properties }: Props) {
           </div>
         </div>
 
-        {/* Property selector */}
         <div className="mb-6">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-3">
             Property
@@ -312,7 +324,7 @@ export function CreatorStudio({ properties }: Props) {
                         borderColor: p.accentColor,
                         borderWidth: 2,
                         color: p.accentColor,
-                        backgroundColor: `${p.accentColor}12`,
+                        backgroundColor: `${p.accentColor}10`,
                       }
                     : { backgroundColor: '#fff', color: '#78716C', borderColor: '#E7E0D8' }
                 }
@@ -324,7 +336,6 @@ export function CreatorStudio({ properties }: Props) {
           </div>
         </div>
 
-        {/* Creation name */}
         <div className="mb-8">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-3">
             Name your creation
@@ -353,76 +364,285 @@ export function CreatorStudio({ properties }: Props) {
     )
   }
 
-  if (phase === 'braindump') {
+  // ── INPUT — mode selection ───────────────────────────────────────────────────
+
+  if (phase === 'input' && inputMode === null) {
     return (
-      <div className="px-4 pt-8 max-w-md mx-auto pb-12">
-        {/* Progress */}
-        <div className="flex items-center gap-3 mb-8">
-          <button onClick={() => setPhase('setup')} className="text-[#78716C]">
-            <ArrowLeft className="w-4 h-4" />
-          </button>
-          <div className="flex-1 bg-[#E7E0D8] rounded-full h-1">
+      <div className="px-4 pt-8 max-w-md mx-auto pb-16">
+        {cameraInput}
+        <ProgressBar pct={20} back={() => setPhase('setup')} />
+
+        <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
+          {creationTitle}
+        </p>
+        <h2 className="font-serif font-bold text-[#1C1917] text-xl mb-2">
+          How do you want to share?
+        </h2>
+        <p className="text-[#78716C] text-sm mb-7">Pick whichever feels natural.</p>
+
+        <div className="space-y-3">
+          {/* Camera */}
+          <button
+            onClick={() => { setInputMode('camera'); openCamera() }}
+            className="w-full flex items-center gap-4 p-5 rounded-2xl bg-white border border-[#E7E0D8] text-left active:scale-[0.98] transition-transform shadow-sm"
+          >
             <div
-              className="h-1 rounded-full transition-all"
-              style={{ width: '25%', backgroundColor: accentColor }}
-            />
-          </div>
-          <span className="text-[#78716C] text-xs">1 / 4</span>
+              className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: `${accentColor}18` }}
+            >
+              <Camera size={22} style={{ color: accentColor }} />
+            </div>
+            <div>
+              <p className="font-semibold text-[#1C1917] text-[15px]">Snap a Photo</p>
+              <p className="text-[#78716C] text-xs mt-0.5">Take a photo of your creation</p>
+            </div>
+          </button>
+
+          {/* Voice */}
+          <button
+            onClick={() => setInputMode('voice')}
+            className="w-full flex items-center gap-4 p-5 rounded-2xl bg-white border border-[#E7E0D8] text-left active:scale-[0.98] transition-transform shadow-sm"
+          >
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: `${accentColor}18` }}
+            >
+              <Mic size={22} style={{ color: accentColor }} />
+            </div>
+            <div>
+              <p className="font-semibold text-[#1C1917] text-[15px]">Voice Memo</p>
+              <p className="text-[#78716C] text-xs mt-0.5">Talk us through it — we'll prompt you</p>
+            </div>
+          </button>
+
+          {/* Text */}
+          <button
+            onClick={() => setInputMode('text')}
+            className="w-full flex items-center gap-4 p-5 rounded-2xl bg-white border border-[#E7E0D8] text-left active:scale-[0.98] transition-transform shadow-sm"
+          >
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: `${accentColor}18` }}
+            >
+              <PenLine size={22} style={{ color: accentColor }} />
+            </div>
+            <div>
+              <p className="font-semibold text-[#1C1917] text-[15px]">Write</p>
+              <p className="text-[#78716C] text-xs mt-0.5">Type a description</p>
+            </div>
+          </button>
         </div>
+      </div>
+    )
+  }
+
+  // ── INPUT — camera ───────────────────────────────────────────────────────────
+
+  if (phase === 'input' && inputMode === 'camera') {
+    return (
+      <div className="px-4 pt-8 max-w-md mx-auto pb-16">
+        {cameraInput}
+        <ProgressBar pct={40} back={() => { setInputMode(null); setImageDataUrl(null) }} />
+
+        {imageDataUrl ? (
+          <>
+            <div className="relative rounded-2xl overflow-hidden shadow-sm mb-5">
+              <img src={imageDataUrl} alt="Your creation" className="w-full object-cover max-h-80" />
+              <button
+                onClick={() => { setImageDataUrl(null); openCamera() }}
+                className="absolute top-3 right-3 bg-white/80 rounded-full p-2 shadow-sm"
+              >
+                <X size={14} className="text-[#78716C]" />
+              </button>
+            </div>
+            <p className="font-serif font-bold text-[#1C1917] text-lg mb-1">Looking good!</p>
+            <p className="text-[#78716C] text-sm mb-6">
+              We&apos;ll use this to help build your training card.
+            </p>
+            <button
+              onClick={handleInputNext}
+              className="w-full py-4 text-white font-semibold rounded-2xl text-sm transition-opacity active:opacity-90"
+              style={{ backgroundColor: accentColor }}
+            >
+              Next →
+            </button>
+          </>
+        ) : (
+          <div className="text-center pt-20">
+            <div className="w-20 h-20 rounded-full bg-stone-100 flex items-center justify-center mx-auto mb-5">
+              <Camera size={32} className="text-[#78716C]" />
+            </div>
+            <p className="text-[#78716C] text-sm mb-6">Camera should be opening...</p>
+            <button
+              onClick={openCamera}
+              className="px-6 py-3 rounded-xl border border-[#E7E0D8] text-sm text-[#78716C] bg-white"
+            >
+              Open camera
+            </button>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // ── INPUT — voice ────────────────────────────────────────────────────────────
+
+  if (phase === 'input' && inputMode === 'voice') {
+    return (
+      <div className="px-4 pt-8 max-w-md mx-auto pb-16">
+        {cameraInput}
+        <ProgressBar pct={40} back={() => setInputMode(null)} />
+
+        <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
+          {creationTitle}
+        </p>
+        <h2 className="font-serif font-bold text-[#1C1917] text-xl mb-6">Voice Memo</h2>
+
+        {!voiceTranscript ? (
+          <div className="text-center">
+            {recording && (
+              <div className="bg-stone-50 border border-[#E7E0D8] rounded-2xl p-5 mb-8 min-h-[80px] flex items-center justify-center">
+                <p className="font-serif italic text-[#1C1917] text-[15px] leading-snug">
+                  &ldquo;{VOICE_PROMPTS[voicePromptIndex]}&rdquo;
+                </p>
+              </div>
+            )}
+            {!recording && !transcribing && (
+              <p className="text-[#78716C] text-sm mb-8">
+                Tap to start — talk naturally, we&apos;ll guide you.
+              </p>
+            )}
+            {transcribing && (
+              <div className="flex items-center justify-center gap-2 text-[#78716C] text-sm mb-8">
+                <Loader2 size={16} className="animate-spin" />
+                <span>Transcribing...</span>
+              </div>
+            )}
+
+            {/* Big record button */}
+            <button
+              onClick={recording ? stopRecording : () => startRecording(setVoiceTranscript)}
+              disabled={transcribing}
+              className="w-24 h-24 rounded-full flex items-center justify-center mx-auto shadow-lg transition-transform active:scale-95 disabled:opacity-50"
+              style={{ backgroundColor: recording ? '#ef4444' : accentColor }}
+            >
+              {recording ? (
+                <div className="w-8 h-8 rounded bg-white" />
+              ) : (
+                <Mic size={36} className="text-white" />
+              )}
+            </button>
+            <p className="text-[#78716C] text-xs mt-4">{recording ? 'Tap to stop' : 'Tap to record'}</p>
+
+            {recording && (
+              <div className="mt-5 flex justify-center items-end gap-1">
+                {WAVE_HEIGHTS.map((h, i) => (
+                  <div
+                    key={i}
+                    className="w-1 rounded-full bg-red-400 animate-pulse"
+                    style={{ height: `${h}px`, animationDelay: `${i * 0.12}s` }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <div className="bg-stone-50 border border-[#E7E0D8] rounded-xl p-4 mb-3">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-2">
+                Your recording
+              </p>
+              <textarea
+                value={voiceTranscript}
+                onChange={(e) => setVoiceTranscript(e.target.value)}
+                rows={5}
+                className="w-full text-sm text-[#1C1917] bg-transparent focus:outline-none resize-none leading-relaxed"
+              />
+            </div>
+            <button
+              onClick={() => setVoiceTranscript('')}
+              className="flex items-center gap-1 text-xs text-[#78716C] mb-6"
+            >
+              <X size={12} /> Record again
+            </button>
+
+            {imageDataUrl ? (
+              <div className="relative rounded-xl overflow-hidden h-28 mb-5 shadow-sm">
+                <img src={imageDataUrl} alt="" className="w-full h-full object-cover" />
+                <button
+                  onClick={() => setImageDataUrl(null)}
+                  className="absolute top-2 right-2 bg-white/80 rounded-full p-1"
+                >
+                  <X size={12} className="text-[#78716C]" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={openCamera}
+                className="flex items-center gap-2 text-sm text-[#78716C] mb-5"
+              >
+                <Camera size={14} />
+                Add a photo too
+              </button>
+            )}
+
+            <button
+              onClick={handleInputNext}
+              className="w-full py-4 text-white font-semibold rounded-2xl text-sm transition-opacity active:opacity-90"
+              style={{ backgroundColor: accentColor }}
+            >
+              Next →
+            </button>
+          </>
+        )}
+      </div>
+    )
+  }
+
+  // ── INPUT — text ─────────────────────────────────────────────────────────────
+
+  if (phase === 'input' && inputMode === 'text') {
+    return (
+      <div className="px-4 pt-8 max-w-md mx-auto pb-16">
+        {cameraInput}
+        <ProgressBar pct={40} back={() => setInputMode(null)} />
 
         <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
           {creationTitle}
         </p>
         <h2 className="font-serif font-bold text-[#1C1917] text-xl mb-2">Tell us about it</h2>
         <p className="text-[#78716C] text-sm mb-5">
-          Rough notes, memories, anything — we&apos;ll help shape it.
+          Rough notes, memories, anything — we&apos;ll shape it into a story.
         </p>
 
         <textarea
-          value={braindump}
-          onChange={(e) => setBraindump(e.target.value)}
-          placeholder="What makes this creation special? How did it come about? Any interesting ingredients, techniques, or stories behind it?"
-          className="w-full h-36 px-4 py-3 rounded-xl border border-[#E7E0D8] text-[#1C1917] text-sm bg-white placeholder-[#A8A09A] focus:outline-none focus:border-stone-400 resize-none"
+          value={textInput}
+          onChange={(e) => setTextInput(e.target.value)}
+          autoFocus
+          placeholder="What makes this special? How did it come about? Any interesting ingredients, technique, or story?"
+          className="w-full h-44 px-4 py-3 rounded-xl border border-[#E7E0D8] text-[#1C1917] text-sm bg-white placeholder-[#A8A09A] focus:outline-none focus:border-stone-400 resize-none mb-4"
         />
 
-        {/* Controls row */}
-        <div className="flex gap-3 mt-3 mb-4">
-          <VoiceButton
-            recording={recording}
-            transcribing={transcribing}
-            onStart={() =>
-              startRecording((text) => setBraindump((b) => (b ? `${b} ${text}` : text)))
-            }
-            onStop={stopRecording}
-            accentColor={accentColor}
-          />
-          <label className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#E7E0D8] text-sm text-[#78716C] bg-white cursor-pointer hover:border-stone-400 transition-colors">
-            <Upload size={14} />
-            <span>{imageDataUrl ? 'Change photo' : 'Add photo'}</span>
-            <input type="file" accept="image/*" className="sr-only" onChange={handleImageUpload} />
-          </label>
-        </div>
-
-        {/* Image preview */}
-        {imageDataUrl && (
-          <div className="mb-4 relative">
-            <img
-              src={imageDataUrl}
-              alt="Uploaded"
-              className="w-full h-36 object-cover rounded-xl"
-            />
+        {imageDataUrl ? (
+          <div className="relative rounded-xl overflow-hidden h-28 mb-5 shadow-sm">
+            <img src={imageDataUrl} alt="" className="w-full h-full object-cover" />
             <button
               onClick={() => setImageDataUrl(null)}
-              className="absolute top-2 right-2 bg-white/80 rounded-full p-1 shadow-sm"
+              className="absolute top-2 right-2 bg-white/80 rounded-full p-1"
             >
-              <X size={14} className="text-[#78716C]" />
+              <X size={12} className="text-[#78716C]" />
             </button>
           </div>
+        ) : (
+          <button onClick={openCamera} className="flex items-center gap-2 text-sm text-[#78716C] mb-5">
+            <Camera size={14} />
+            Add a photo too
+          </button>
         )}
 
         <button
-          onClick={handleBraindumpNext}
-          disabled={!braindump.trim()}
+          onClick={handleInputNext}
+          disabled={!textInput.trim()}
           className="w-full py-4 text-white font-semibold rounded-2xl text-sm disabled:opacity-40 transition-opacity"
           style={{ backgroundColor: accentColor }}
         >
@@ -432,48 +652,32 @@ export function CreatorStudio({ properties }: Props) {
     )
   }
 
+  // ── LOADING ──────────────────────────────────────────────────────────────────
+
   if (phase === 'loading-questions' || phase === 'synthesizing') {
-    const msg =
-      phase === 'loading-questions' ? 'Finding the hidden stories...' : 'Crafting your training card...'
     return (
       <div className="px-4 pt-40 max-w-md mx-auto text-center">
         <Loader2 className="w-8 h-8 animate-spin text-[#78716C] mx-auto mb-4" />
-        <p className="text-[#78716C] text-sm">{msg}</p>
+        <p className="text-[#78716C] text-sm">
+          {phase === 'loading-questions' ? 'Finding the hidden stories...' : 'Crafting your training card...'}
+        </p>
       </div>
     )
   }
 
-  if (phase === 'qa') {
-    const question = questions[qaIndex]
-    return (
-      <div className="px-4 pt-8 max-w-md mx-auto pb-12">
-        {/* Progress */}
-        <div className="flex items-center gap-3 mb-8">
-          <button
-            onClick={() => {
-              if (qaIndex > 0) setQaIndex((i) => i - 1)
-              else setPhase('braindump')
-            }}
-            className="text-[#78716C]"
-          >
-            <ArrowLeft className="w-4 h-4" />
-          </button>
-          <div className="flex-1 bg-[#E7E0D8] rounded-full h-1">
-            <div
-              className="h-1 rounded-full transition-all duration-300"
-              style={{
-                width: `${((qaIndex + 2) / (questions.length + 2)) * 100}%`,
-                backgroundColor: accentColor,
-              }}
-            />
-          </div>
-          <span className="text-[#78716C] text-xs tabular-nums">
-            {qaIndex + 1}/{questions.length}
-          </span>
-        </div>
+  // ── Q&A ──────────────────────────────────────────────────────────────────────
 
+  if (phase === 'qa') {
+    return (
+      <div className="px-4 pt-8 max-w-md mx-auto pb-16">
+        {cameraInput}
+        <ProgressBar pct={40 + ((qaIndex + 1) / questions.length) * 35} back={handleQaBack} />
+
+        <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-4">
+          Quick question {qaIndex + 1} of {questions.length}
+        </p>
         <h2 className="font-serif font-bold text-[#1C1917] text-lg leading-snug mb-6">
-          {question}
+          {questions[qaIndex]}
         </h2>
 
         <textarea
@@ -483,17 +687,30 @@ export function CreatorStudio({ properties }: Props) {
           className="w-full h-32 px-4 py-3 rounded-xl border border-[#E7E0D8] text-[#1C1917] text-sm bg-white placeholder-[#A8A09A] focus:outline-none focus:border-stone-400 resize-none mb-4"
         />
 
-        <VoiceButton
-          recording={recording}
-          transcribing={transcribing}
-          onStart={() =>
-            startRecording((text) => setCurrentAnswer((a) => (a ? `${a} ${text}` : text)))
-          }
-          onStop={stopRecording}
-          accentColor={accentColor}
-        />
+        {transcribing ? (
+          <div className="flex items-center gap-2 text-[#78716C] text-sm mb-4">
+            <Loader2 size={14} className="animate-spin" />
+            <span>Transcribing...</span>
+          </div>
+        ) : recording ? (
+          <button
+            onClick={stopRecording}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-red-400 text-sm text-red-600 bg-red-50 mb-4"
+          >
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            Stop recording
+          </button>
+        ) : (
+          <button
+            onClick={() => startRecording((t) => setCurrentAnswer((a) => (a ? `${a} ${t}` : t)))}
+            className="flex items-center gap-2 text-sm text-[#78716C] mb-4"
+          >
+            <Mic size={14} style={{ color: accentColor }} />
+            Answer by voice
+          </button>
+        )}
 
-        <div className="flex gap-3 mt-4">
+        <div className="flex gap-3">
           <button
             onClick={() => handleQaNext(true)}
             className="flex-1 py-3 text-[#78716C] text-sm border border-[#E7E0D8] rounded-xl bg-white"
@@ -512,116 +729,204 @@ export function CreatorStudio({ properties }: Props) {
     )
   }
 
+  // ── PREVIEW ──────────────────────────────────────────────────────────────────
+
   if (phase === 'preview' && generatedCard) {
     return (
-      <div className="px-4 pt-8 pb-20 max-w-md mx-auto">
-        <p className="text-[10px] font-semibold tracking-widest text-[#78716C] uppercase mb-1">
-          Preview
-        </p>
-        <h2 className="font-serif font-bold text-[#1C1917] text-xl mb-6">Your training card</h2>
+      <div className="pb-24">
+        {cameraInput}
 
-        {imageDataUrl && (
-          <img
-            src={imageDataUrl}
-            alt=""
-            className="w-full h-48 object-cover rounded-2xl mb-5 shadow-sm"
-          />
+        {/* Hero image — full bleed */}
+        {generatedCard.imageUrl && (
+          <div className="relative h-72">
+            <img
+              src={generatedCard.imageUrl}
+              alt=""
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#FAF7F2] via-[#FAF7F2]/10 to-transparent" />
+            <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
+              <span
+                className="bg-white/90 backdrop-blur-sm text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm"
+                style={{ color: accentColor }}
+              >
+                {activeProperty?.restaurantName}
+              </span>
+              <span className="bg-white/90 backdrop-blur-sm text-xs text-[#78716C] font-medium px-3 py-1.5 rounded-full shadow-sm">
+                {role}
+              </span>
+            </div>
+          </div>
         )}
 
-        {/* Editable title */}
-        <div className="mb-4">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-1.5">
-            Title
-          </p>
+        <div className="px-4 pt-4">
+          {/* Editable title — styled as display text */}
           <input
             value={editTitle}
             onChange={(e) => setEditTitle(e.target.value)}
-            className="w-full px-3 py-2.5 rounded-xl border border-[#E7E0D8] font-serif font-bold text-[#1C1917] text-lg bg-white focus:outline-none focus:border-stone-400"
+            className="w-full font-serif font-bold text-[#1C1917] text-2xl bg-transparent outline-none pb-0.5 border-b-2 border-transparent focus:border-stone-200 transition-colors"
           />
-        </div>
 
-        {/* Editable subtitle */}
-        <div className="mb-5">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-1.5">
-            Subtitle
-          </p>
+          {/* Editable subtitle */}
           <textarea
             value={editSubtitle}
             onChange={(e) => setEditSubtitle(e.target.value)}
             rows={2}
-            className="w-full px-3 py-2.5 rounded-xl border border-[#E7E0D8] text-[#78716C] text-sm bg-white focus:outline-none focus:border-stone-400 resize-none"
+            className="w-full text-[#78716C] text-sm bg-transparent outline-none resize-none mt-2 leading-relaxed border-b border-transparent focus:border-stone-200 transition-colors"
           />
-        </div>
 
-        {/* The short story (editable) */}
-        <div className="bg-stone-50 border border-[#E7E0D8] rounded-xl p-4 mb-3">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-2">
-            The short story
-          </p>
-          <textarea
-            value={editHeadline}
-            onChange={(e) => setEditHeadline(e.target.value)}
-            rows={2}
-            className="w-full text-sm text-[#1C1917] bg-transparent focus:outline-none resize-none"
-          />
-        </div>
-
-        {/* Story layer */}
-        <div className="bg-stone-50 border border-[#E7E0D8] rounded-xl p-4 mb-3">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-2">
-            Go deeper
-          </p>
-          <p className="text-sm text-[#78716C] leading-relaxed">{generatedCard.layers.story}</p>
-        </div>
-
-        {/* Details */}
-        {generatedCard.layers.details.length > 0 && (
-          <div className="bg-stone-50 border border-[#E7E0D8] rounded-xl p-4 mb-4">
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-2">
-              Name-drop details
-            </p>
-            <ul className="space-y-1">
-              {generatedCard.layers.details.map((d, i) => (
-                <li key={i} className="text-sm text-[#78716C]">
-                  · {d}
-                </li>
+          {/* Tags */}
+          {generatedCard.tags?.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-3 mb-5">
+              {generatedCard.tags.map((tag) => (
+                <TagChip key={tag} tag={tag} />
               ))}
-            </ul>
-          </div>
-        )}
+            </div>
+          )}
 
-        {/* Tags */}
-        {generatedCard.tags?.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-6">
-            {generatedCard.tags.map((tag) => (
-              <TagChip key={tag} tag={tag} />
-            ))}
-          </div>
-        )}
+          <div className="border-t border-[#E7E0D8] my-5" />
 
-        <button
-          onClick={handlePublish}
-          className="w-full py-4 text-white font-semibold rounded-2xl text-sm transition-opacity active:opacity-90"
-          style={{ backgroundColor: accentColor }}
-        >
-          Publish to Library →
-        </button>
+          {/* The Short Story — editable */}
+          <div className="mb-5">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-2">
+              The Short Story
+            </p>
+            <textarea
+              value={editHeadline}
+              onChange={(e) => setEditHeadline(e.target.value)}
+              rows={2}
+              className="w-full font-serif italic text-[#1C1917] text-[15px] leading-snug bg-transparent outline-none resize-none"
+            />
+          </div>
+
+          <div className="border-t border-[#E7E0D8] my-5" />
+
+          {/* Go Deeper */}
+          <div className="mb-5">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-2">
+              Go Deeper
+            </p>
+            <p className="text-sm text-[#78716C] leading-relaxed">{generatedCard.layers.story}</p>
+          </div>
+
+          {/* Name-Drop Details */}
+          {generatedCard.layers.details.length > 0 && (
+            <>
+              <div className="border-t border-[#E7E0D8] my-5" />
+              <div className="mb-5">
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-[#78716C] mb-3">
+                  Name-Drop Details
+                </p>
+                <ul className="space-y-2">
+                  {generatedCard.layers.details.map((d, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-[#78716C]">
+                      <span
+                        className="font-bold mt-0.5 flex-shrink-0"
+                        style={{ color: accentColor }}
+                      >
+                        ·
+                      </span>
+                      <span>{d}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
+
+          {/* Pronunciation */}
+          {generatedCard.pronounceTargets?.length > 0 && (
+            <>
+              <div className="border-t border-[#E7E0D8] my-5" />
+              <div className="mb-5">
+                <p
+                  className="text-[10px] font-semibold uppercase tracking-widest mb-3"
+                  style={{ color: accentColor }}
+                >
+                  Say it right
+                </p>
+                <div className="flex flex-col gap-3">
+                  {generatedCard.pronounceTargets.map((target) => (
+                    <PronounceButton
+                      key={target.term}
+                      target={target}
+                      accentColor={accentColor}
+                      size="md"
+                    />
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          <div className="border-t border-[#E7E0D8] my-5" />
+
+          <button
+            onClick={handlePublish}
+            className="w-full py-4 text-white font-semibold rounded-2xl text-sm transition-opacity active:opacity-90 shadow-sm"
+            style={{ backgroundColor: accentColor }}
+          >
+            Publish to Library →
+          </button>
+          <p className="text-center text-xs text-[#A8A09A] mt-3">
+            Tap the title or headline above to edit before publishing
+          </p>
+        </div>
       </div>
     )
   }
 
+  // ── PUBLISHED ────────────────────────────────────────────────────────────────
+
   if (phase === 'published') {
     return (
-      <div className="px-4 pt-16 max-w-md mx-auto text-center">
-        <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-6">
-          <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+      <div className="pb-16">
+        <div className="px-4 pt-14 max-w-md mx-auto text-center mb-7">
+          <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-5">
+            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+          </div>
+          <h1 className="font-serif font-bold text-[#1C1917] text-2xl mb-2">Now live!</h1>
+          <p className="text-[#78716C] text-sm">
+            Staff can now learn the story of{' '}
+            <span className="font-semibold text-[#1C1917]">{editTitle || creationTitle}</span>.
+          </p>
         </div>
-        <h1 className="font-serif font-bold text-[#1C1917] text-2xl mb-2">Live in the library!</h1>
-        <p className="text-[#78716C] text-sm mb-8">
-          Staff can now learn the story of {editTitle || creationTitle}.
-        </p>
 
-        <div className="space-y-3">
+        {/* Mini card */}
+        {generatedCard && (
+          <div className="mx-4 bg-white rounded-2xl border border-[#E7E0D8] overflow-hidden shadow-sm mb-7">
+            {generatedCard.imageUrl && (
+              <img
+                src={generatedCard.imageUrl}
+                alt=""
+                className="w-full h-40 object-cover"
+              />
+            )}
+            <div className="p-4">
+              <p
+                className="text-[10px] font-semibold uppercase tracking-widest mb-1"
+                style={{ color: accentColor }}
+              >
+                {activeProperty?.restaurantName}
+              </p>
+              <h3 className="font-serif font-bold text-[#1C1917] text-[17px] leading-snug mb-1">
+                {editTitle || generatedCard.title}
+              </h3>
+              <p className="text-[#78716C] text-xs line-clamp-2 leading-relaxed">
+                {editSubtitle || generatedCard.subtitle}
+              </p>
+              {generatedCard.tags?.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-2.5">
+                  {generatedCard.tags.slice(0, 3).map((tag) => (
+                    <TagChip key={tag} tag={tag} />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className="px-4 space-y-3">
           {publishedId && (
             <Link
               href={`/stories/${publishedId}`}
@@ -638,7 +943,7 @@ export function CreatorStudio({ properties }: Props) {
           >
             Add another story
           </button>
-          <Link href="/" className="block mt-2 text-[#78716C] text-sm">
+          <Link href="/" className="block text-center text-[#78716C] text-sm pt-1">
             ← Back to library
           </Link>
         </div>
