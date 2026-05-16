@@ -37,6 +37,7 @@ export interface StoryCard {
   propertyId: PropertyId
   title: string
   subtitle: string
+  seasonalPeriod?: string   // e.g. "Nov – May"
   imageUrl: string
   tags: Tag[]
   layers: StoryLayers

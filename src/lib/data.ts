@@ -1,4 +1,5 @@
 import type { Property, StoryCard, GuestProfile, QuizBank, PropertyId } from './types'
+import { getCreatedStories } from './store'
 
 // Import JSON — Next.js resolves these at build time
 import _properties from '@/data/properties.json'
@@ -18,11 +19,11 @@ export function getProperty(id: PropertyId): Property | undefined {
 }
 
 export function getStoriesByProperty(propertyId: PropertyId): StoryCard[] {
-  return stories.filter((s) => s.propertyId === propertyId)
+  return [...stories, ...getCreatedStories()].filter((s) => s.propertyId === propertyId)
 }
 
 export function getStory(id: string): StoryCard | undefined {
-  return stories.find((s) => s.id === id)
+  return [...stories, ...getCreatedStories()].find((s) => s.id === id)
 }
 
 export function getGuest(id: string): GuestProfile | undefined {

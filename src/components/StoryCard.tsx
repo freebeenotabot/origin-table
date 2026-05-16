@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Volume2 } from 'lucide-react'
+import { Volume2, CalendarDays } from 'lucide-react'
 import type { StoryCard as StoryCardType } from '@/lib/types'
 import TagChip from './TagChip'
 
@@ -22,10 +22,19 @@ export default function StoryCard({ story, accentColor }: Props) {
           />
         </div>
         <div className="p-3">
-          <h3 className="font-serif font-semibold text-[15px] text-[#1C1917] leading-snug line-clamp-2">
+          <h3 className="font-serif font-semibold text-[14px] text-[#1C1917] leading-snug">
             {story.title}
           </h3>
-          <p className="text-[12px] text-[#78716C] mt-0.5 line-clamp-2 leading-snug">
+          {story.seasonalPeriod && (
+            <div
+              className="inline-flex items-center gap-1 mt-1 text-[10px] font-semibold tracking-wide rounded-full px-2 py-0.5"
+              style={{ color: accentColor, backgroundColor: `${accentColor}15` }}
+            >
+              <CalendarDays size={9} />
+              {story.seasonalPeriod}
+            </div>
+          )}
+          <p className="text-[11px] text-[#78716C] mt-1 line-clamp-2 leading-snug">
             {story.subtitle}
           </p>
 

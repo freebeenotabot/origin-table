@@ -4,6 +4,7 @@
     "propertyId": "miramar",
     "title": "California King Crab",
     "subtitle": "Caught within 50 miles. Certified by two ocean watchdogs.",
+    "seasonalPeriod": "Nov 2025 – May 2026",
     "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
     "tags": ["sustainability", "local-farm", "award-winning", "seasonal"],
     "layers": {
@@ -42,6 +43,7 @@
     "propertyId": "miramar",
     "title": "The Chef's Garden & Resident Beehive",
     "subtitle": "30 feet from kitchen to plate. The bees work here too.",
+    "seasonalPeriod": "Jun 2026 – Sep 2026",
     "imageUrl": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=800&q=80",
     "tags": ["sustainability", "local-farm", "seasonal", "wellness"],
     "layers": {
@@ -80,6 +82,7 @@
     "propertyId": "miramar",
     "title": "Three Stars, Two Michelin, One Philosophy",
     "subtitle": "The only California restaurant with a star for excellence AND a star for sustainability.",
+    "seasonalPeriod": "Year-round 2026",
     "imageUrl": "https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=800&q=80",
     "tags": ["award-winning", "sustainability", "wellness"],
     "layers": {
@@ -113,6 +116,7 @@
     "propertyId": "bangkok",
     "title": "Massaman Nuea Tu Rian Tod",
     "subtitle": "Royal Thai beef shank curry — with crispy durian. A palace dish at your table.",
+    "seasonalPeriod": "May 2026 – Aug 2026",
     "imageUrl": "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=800&q=80",
     "tags": ["cultural-heritage", "seasonal", "award-winning"],
     "layers": {
@@ -151,6 +155,7 @@
     "propertyId": "bangkok",
     "title": "Chef Bua — 30 Years, Royal Kitchen to Your Table",
     "subtitle": "She learned from palace cooks. Now she teaches the next generation.",
+    "seasonalPeriod": "Year-round 2026",
     "imageUrl": "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=800&q=80",
     "tags": ["cultural-heritage", "women-led", "award-winning"],
     "layers": {
@@ -189,6 +194,7 @@
     "propertyId": "bangkok",
     "title": "Partners in Provenance — Six Named Farms",
     "subtitle": "Every protein, every rice grain — has a farm name and a face behind it.",
+    "seasonalPeriod": "Oct 2025 – Feb 2026",
     "imageUrl": "https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=800&q=80",
     "tags": ["local-farm", "sustainability", "wellness"],
     "layers": {
@@ -228,6 +234,7 @@
     "propertyId": "san-miguel",
     "title": "Traspatio — The Women Behind Every Chicken",
     "subtitle": "When you order the chicken, you are funding these women's livelihoods. That's the whole story.",
+    "seasonalPeriod": "Year-round 2026",
     "imageUrl": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80",
     "tags": ["women-led", "sustainability", "local-farm", "zero-waste"],
     "layers": {
@@ -266,6 +273,7 @@
     "propertyId": "san-miguel",
     "title": "Fire, Ash & Ancestral Flame",
     "subtitle": "80% of this menu was cooked over open fire. This technique is older than any oven.",
+    "seasonalPeriod": "Year-round 2026",
     "imageUrl": "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=800&q=80",
     "tags": ["cultural-heritage", "fire-cooking", "seasonal"],
     "layers": {
@@ -304,6 +312,7 @@
     "propertyId": "san-miguel",
     "title": "The 60-Mile Circle",
     "subtitle": "99% of every ingredient — within 60 miles. The 1% is salt.",
+    "seasonalPeriod": "Apr 2026 – Nov 2026",
     "imageUrl": "https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=800&q=80",
     "tags": ["sustainability", "local-farm", "zero-waste", "award-winning"],
     "layers": {

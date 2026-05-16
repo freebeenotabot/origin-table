@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, CalendarDays } from 'lucide-react'
 import { getStory, getProperty } from '@/lib/data'
 import TagChip from '@/components/TagChip'
 import LayeredContent from '@/components/LayeredContent'
@@ -49,9 +49,20 @@ export default function StoryPage({ params }: Props) {
       <div className="px-4 -mt-4 space-y-5">
         {/* Title block */}
         <div>
-          <h1 className="font-serif font-bold text-[#1C1917] text-2xl leading-tight mb-1.5">
+          <h1 className="font-serif font-bold text-[#1C1917] text-2xl leading-tight mb-2">
             {card.title}
           </h1>
+          {card.seasonalPeriod && (
+            <div
+              className="inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-wide rounded-full px-3 py-1 mb-2"
+              style={{ color: accentColor, backgroundColor: `${accentColor}15` }}
+            >
+              <CalendarDays size={11} />
+              {card.seasonalPeriod === 'Year-round'
+                ? 'Year-round'
+                : `In season: ${card.seasonalPeriod}`}
+            </div>
+          )}
           <p className="text-[#78716C] text-sm leading-relaxed">{card.subtitle}</p>
         </div>
 
